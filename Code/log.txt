@@ -1,0 +1,266 @@
+[33mprev_token: 28[0m
+newline at line: 2
+TYPE
+[TreeNode] lineno: 2, int, type: 2
+[Internal] lineno: 2, Specifier, argc: 1
+    [ptr] 0: int, type: 5
+
+[TreeNode] lineno: 2, Specifier, type: 5
+[33mprev_token: 12[0m
+ID
+[TreeNode] lineno: 2, main, type: 3
+[33mprev_token: 24[0m
+LP
+[TreeNode] lineno: 2, LP, type: 4
+[33mprev_token: 13[0m
+RP
+[TreeNode] lineno: 2, RP, type: 4
+[Internal] lineno: 2, FunDec, argc: 3
+    [ptr] 0: main, type: 5
+    [ptr] 1: LP, type: 5
+    [ptr] 2: RP, type: 5
+
+[TreeNode] lineno: 2, FunDec, type: 5
+[33mprev_token: 14[0m
+LC
+[TreeNode] lineno: 2, LC, type: 4
+[33mprev_token: 17[0m
+newline at line: 3
+ID
+[TreeNode] lineno: 3, ic, type: 3
+[TreeNode] lineno: 2, DefList, type: 6
+[33mprev_token: 24[0m
+=
+[TreeNode] lineno: 3, ASSIGNOP, type: 4
+[Internal] lineno: 3, Exp, argc: 1
+    [ptr] 0: ic, type: 5
+
+[TreeNode] lineno: 3, Exp, type: 5
+[33mprev_token: 2[0m
+INT
+[TreeNode] lineno: 3, 0, type: 0
+[Internal] lineno: 3, Exp, argc: 1
+    [ptr] 0: 0, type: 5
+
+[TreeNode] lineno: 3, Exp, type: 5
+[33mprev_token: 26[0m
+newline at line: 4
+Error type B at Line 4: missing SEMI.
+[Internal] lineno: 3, Exp, argc: 3
+    [ptr] 0: Exp, type: 5
+    [ptr] 1: ASSIGNOP, type: 5
+    [ptr] 2: Exp, type: 5
+
+[Internal] lineno: 3, Stmt, argc: 2
+    [ptr] 0: NULL
+    [ptr] 1: 0, type: 5
+
+[33mprev_token: 30[0m
+while
+[TreeNode] lineno: 4, WHILE, type: 4
+[33mprev_token: 23[0m
+LP
+[TreeNode] lineno: 4, LP, type: 4
+[33mprev_token: 13[0m
+ID
+[TreeNode] lineno: 4, ic, type: 3
+[33mprev_token: 24[0m
+RELOP
+[TreeNode] lineno: 4, RELOP, type: 4
+[Internal] lineno: 4, Exp, argc: 1
+    [ptr] 0: ic, type: 5
+
+[33mprev_token: 3[0m
+INT
+[TreeNode] lineno: 4, 4, type: 0
+[Internal] lineno: 4, Exp, argc: 1
+    [ptr] 0: 4, type: 5
+
+[33mprev_token: 26[0m
+RP
+[TreeNode] lineno: 4, RP, type: 4
+[Internal] lineno: 4, Exp, argc: 3
+    [ptr] 0: NULL
+    [ptr] 1: RELOP, type: 5
+    [ptr] 2: NULL
+
+[33mprev_token: 14[0m
+LC
+[TreeNode] lineno: 4, LC, type: 4
+[33mprev_token: 17[0m
+newline at line: 5
+ID
+[TreeNode] lineno: 5, write, type: 3
+[TreeNode] lineno: 4, DefList, type: 6
+[33mprev_token: 24[0m
+LP
+[TreeNode] lineno: 5, LP, type: 4
+[33mprev_token: 13[0m
+ID
+[TreeNode] lineno: 5, c, type: 3
+[33mprev_token: 24[0m
+LB
+[TreeNode] lineno: 5, LB, type: 4
+[Internal] lineno: 5, Exp, argc: 1
+    [ptr] 0: c, type: 5
+
+[33mprev_token: 15[0m
+ID
+[TreeNode] lineno: 5, ic, type: 3
+[33mprev_token: 24[0m
+RB
+[TreeNode] lineno: 5, RB, type: 4
+[Internal] lineno: 5, Exp, argc: 1
+    [ptr] 0: ic, type: 5
+
+[Internal] lineno: 5, Exp, argc: 4
+    [ptr] 0: NULL
+    [ptr] 1: LB, type: 5
+    [ptr] 2: NULL
+    [ptr] 3: RB, type: 5
+
+[33mprev_token: 16[0m
+RP
+[TreeNode] lineno: 5, RP, type: 4
+[Internal] lineno: 5, Args, argc: 1
+    [ptr] 0: NULL
+
+[Internal] lineno: 5, Exp, argc: 4
+    [ptr] 0: write, type: 5
+    [ptr] 1: LP, type: 5
+    [ptr] 2: NULL
+    [ptr] 3: RP, type: 5
+
+[33mprev_token: 14[0m
+;
+[TreeNode] lineno: 5, SEMI, type: 4
+[Internal] lineno: 5, Stmt, argc: 2
+    [ptr] 0: NULL
+    [ptr] 1: SEMI, type: 5
+
+[33mprev_token: 0[0m
+newline at line: 6
+ID
+[TreeNode] lineno: 6, ic, type: 3
+[33mprev_token: 24[0m
+=
+[TreeNode] lineno: 6, ASSIGNOP, type: 4
+[Internal] lineno: 6, Exp, argc: 1
+    [ptr] 0: ic, type: 5
+
+[33mprev_token: 2[0m
+ID
+[TreeNode] lineno: 6, ic, type: 3
+[33mprev_token: 24[0m
++
+[TreeNode] lineno: 6, PLUS, type: 4
+[Internal] lineno: 6, Exp, argc: 1
+    [ptr] 0: ic, type: 5
+
+[33mprev_token: 4[0m
+INT
+[TreeNode] lineno: 6, 1, type: 0
+[Internal] lineno: 6, Exp, argc: 1
+    [ptr] 0: 1, type: 5
+
+[33mprev_token: 26[0m
+;
+[TreeNode] lineno: 6, SEMI, type: 4
+[Internal] lineno: 6, Exp, argc: 3
+    [ptr] 0: NULL
+    [ptr] 1: PLUS, type: 5
+    [ptr] 2: NULL
+
+[Internal] lineno: 6, Exp, argc: 3
+    [ptr] 0: NULL
+    [ptr] 1: ASSIGNOP, type: 5
+    [ptr] 2: NULL
+
+[Internal] lineno: 6, Stmt, argc: 2
+    [ptr] 0: NULL
+    [ptr] 1: SEMI, type: 5
+
+[33mprev_token: 0[0m
+newline at line: 7
+RC
+[TreeNode] lineno: 7, RC, type: 4
+[TreeNode] lineno: 6, StmtList, type: 6
+[Internal] lineno: 6, StmtList, argc: 2
+    [ptr] 0: NULL
+    [ptr] 1: StmtList, type: 5
+
+[Internal] lineno: 5, StmtList, argc: 2
+    [ptr] 0: NULL
+    [ptr] 1: NULL
+
+[Internal] lineno: 4, CompSt, argc: 4
+    [ptr] 0: LC, type: 5
+    [ptr] 1: DefList, type: 5
+    [ptr] 2: NULL
+    [ptr] 3: RC, type: 5
+
+[Internal] lineno: 4, Stmt, argc: 1
+    [ptr] 0: NULL
+
+[Internal] lineno: 4, Stmt, argc: 5
+    [ptr] 0: WHILE, type: 5
+    [ptr] 1: LP, type: 5
+    [ptr] 2: NULL
+    [ptr] 3: RP, type: 5
+    [ptr] 4: NULL
+
+[33mprev_token: 18[0m
+newline at line: 8
+return
+[TreeNode] lineno: 8, RETURN, type: 4
+[33mprev_token: 20[0m
+INT
+[TreeNode] lineno: 8, 0, type: 0
+[Internal] lineno: 8, Exp, argc: 1
+    [ptr] 0: 0, type: 5
+
+[33mprev_token: 26[0m
+;
+[TreeNode] lineno: 8, SEMI, type: 4
+[Internal] lineno: 8, Stmt, argc: 3
+    [ptr] 0: RETURN, type: 5
+    [ptr] 1: NULL
+    [ptr] 2: SEMI, type: 5
+
+[33mprev_token: 0[0m
+newline at line: 9
+RC
+[TreeNode] lineno: 9, RC, type: 4
+[TreeNode] lineno: 8, StmtList, type: 6
+[Internal] lineno: 8, StmtList, argc: 2
+    [ptr] 0: NULL
+    [ptr] 1: StmtList, type: 5
+
+[Internal] lineno: 4, StmtList, argc: 2
+    [ptr] 0: NULL
+    [ptr] 1: NULL
+
+[Internal] lineno: 3, StmtList, argc: 2
+    [ptr] 0: NULL
+    [ptr] 1: NULL
+
+[Internal] lineno: 2, CompSt, argc: 4
+    [ptr] 0: LC, type: 5
+    [ptr] 1: DefList, type: 5
+    [ptr] 2: NULL
+    [ptr] 3: RC, type: 5
+
+[Internal] lineno: 2, ExtDef, argc: 3
+    [ptr] 0: Specifier, type: 5
+    [ptr] 1: FunDec, type: 5
+    [ptr] 2: NULL
+
+[33mprev_token: 18[0m
+[TreeNode] lineno: 9, ExtDefList, type: 6
+[Internal] lineno: 2, ExtDefList, argc: 2
+    [ptr] 0: NULL
+    [ptr] 1: ExtDefList, type: 5
+
+[Internal] lineno: 2, Program, argc: 1
+    [ptr] 0: NULL
+
