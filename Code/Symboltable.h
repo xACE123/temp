@@ -5,8 +5,9 @@
 #include <string.h>
 #include<stdlib.h>
 
+// mod for hash table
 #define MOD 100003
-//type of varibles
+//type of variables
 
 int cmp(char a[40],char b[40]);//Used to compare 40 size strings for equality
 
@@ -20,13 +21,13 @@ typedef struct int_link
 }int_link;
 
 //variable type
-
 typedef struct pure_style
 {
-    int type;//0 means bool, 1 means int, 2=float, 3=struct, 4=null_type
+    int type;//0=bool, 1=int, 2=float, 3=struct, 4=null_type
     int dimension;//
     int struct_id;// if it is a struct
 }pure_style;
+
 typedef struct ps_link
 {
     pure_style p;
@@ -53,15 +54,16 @@ typedef struct style_link
     struct style_link*next;
 }style_link;
 
+// style table as a hash table
 typedef struct style_table
 {
     style_link* h[MOD];
 }style_table;
 // init means initialize a form
-// search means search a element by its name
-//insert means insert a element to the table
 void initst(style_table **t);
+// search means search a element by its name
 style search_s(style_table *t,char name[40]);
+//insert means insert a element to the table
 void insert_s(style_table *t,style s);
 pure_style style_to_pure(style a);
 
@@ -71,8 +73,8 @@ typedef struct architecture
     char s_name[40];
     int struct_id;
     style_link* head;
-
 }architecture;
+
 typedef struct architecture_link
 {
     architecture a;
@@ -112,4 +114,4 @@ void initft(funcion_table** t);
 function search_f(funcion_table *t,char name[40]);
 void insert_f(funcion_table *t, function f);
 int cmp_function(function a, function b);
-#endif
+#endif //SYMBOLTABLE_H

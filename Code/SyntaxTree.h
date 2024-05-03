@@ -59,9 +59,9 @@ e.g.:
 
 */
 
-TreeNode* get_k_son(int,TreeNode*);
+TreeNode* get_k_son(int, TreeNode*);
 
-TreeNode* createTreeNode(int, op_type, char*,int );
+TreeNode* createTreeNode(int, op_type, char*, int);
 
 TreeNode* createLeafNode(int,int, op_type, char*);
 

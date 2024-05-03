@@ -1,7 +1,7 @@
 
 #include "SyntaxTree.h"
 #include "syntax.tab.h"
-#include"Semantic.h"
+#include "Semantic.h"
 #include <stdio.h>
 #include <memory.h>
 #include <stdlib.h>
