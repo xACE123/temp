@@ -17,18 +17,6 @@
 #define FALSE 0
 
 
-typedef struct attribute
-{
-    ps_link* ph;
-    style_link *sh;
-    int sign;
-    char name[40];
-    int in_statement;//Used to determine if a variable is within a function declaration
-}attribute;
-
-
-
-
 // type of the tree node
 typedef enum op_type {
     TOKEN_INT,
@@ -39,6 +27,15 @@ typedef enum op_type {
     NON_TERMINAL,
     EMPTY_PRODUCTION // e.g. Compst -> epsilon
 } op_type;
+
+typedef struct attribute
+{
+    ps_link* ph;
+    style_link *sh;
+    int sign;
+    char name[40];
+    int in_statement;//Used to determine if a variable is within a function declaration
+}attribute;
 
 
 typedef struct TreeNode{
