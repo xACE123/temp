@@ -2,6 +2,7 @@
 #include "SyntaxTree.h"
 #include "syntax.tab.h"
 #include "Semantic.h"
+#include "inter.h"
 #include <stdio.h>
 #include <memory.h>
 #include <stdlib.h>
@@ -22,7 +23,8 @@ int syntaxError = FALSE;
 int *lexErrorList; // 0: no error, 1: lexical error 2: syntax error 
 char **structIDList;
 int structIDCnt = 0;
-FILE* f;
+FILE* f; // input: the cmm file
+FILE* fout;  // output: output1.ir
 
 void addStruct(char *SID) {
     if (structIDCnt >= 100) {
@@ -53,6 +55,13 @@ int main(int argc, char** argv) {
     else {
         structIDList = (char **)malloc(sizeof(char *) * 100);
     }
+
+    fout = fopen(argv[2], "wt+");
+    if (!fout) {
+        perror(argv[2]);
+        return 1;
+    }
+
     yyrestart(f);
     yyparse();
     // printf("lex: %d syntax: %d\n", lexicalError, syntaxError);
@@ -61,7 +70,11 @@ int main(int argc, char** argv) {
        // printf("bingo! syntax tree will be printed\n");
        // printSyntaxTree(root,0);
        fdfs(root);
-       printSyntaxTree(root,0);
+       // printSyntaxTree(root,0);
+       // no error so far, traverse the tree to generate the intercode
+       genInterCode(root);
+       // then print the intercode to the output file
+       printInterCode(fout);
     }
     return 0;
 }
