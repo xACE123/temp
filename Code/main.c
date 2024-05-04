@@ -57,10 +57,11 @@ int main(int argc, char** argv) {
     yyparse();
     // printf("lex: %d syntax: %d\n", lexicalError, syntaxError);
     if ((!lexicalError) && (!syntaxError)) {
-        // no problem detected, therefore the syntax tree will be printed.
-        // printf("bingo! syntax tree will be printed\n");
+       // no problem detected, therefore the syntax tree will be printed.
+       // printf("bingo! syntax tree will be printed\n");
        // printSyntaxTree(root,0);
-        fdfs(root);
+       fdfs(root);
+       printSyntaxTree(root,0);
     }
     return 0;
 }

@@ -183,6 +183,34 @@ void fdfs(TreeNode* p){
         initat(&atable);
         initft(&ste_table);
         initft(&def_table);
+        // XXX: need to add function `RAED`, `WRITE`
+        // insert read()
+        function _read;
+        strcpy(_read.s_name, "read");
+        pure_style read_ret;
+        read_ret.type = 1;        
+        read_ret.dimension = 1; // XXX: is that right?
+        _read.return_type = read_ret;
+        _read.head = NULL; // as it has no attributes
+        _read.lines = -1;
+        insert_f(def_table, _read);
+        insert_f(ste_table, _read);
+        // insert write()
+        function _write;
+        strcpy(_write.s_name, "write");
+        pure_style write_ret;
+        write_ret.type = 1; 
+        write_ret.dimension = 1;
+        _write.return_type = write_ret;
+        ps_link* write_attr = (ps_link *)malloc(sizeof(ps_link));
+        write_attr->next = NULL;
+        write_attr->p.type = 1;
+        write_attr->p.dimension = 1;
+        _write.head = write_attr;
+        _write.lines = -1;
+        insert_f(def_table, _write);
+        insert_f(ste_table, _write);
+
         arcid=0;
         for(int i=0;i<50000;++i)
             wrong[i]=0;
