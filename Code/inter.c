@@ -316,9 +316,11 @@ operand* newLabel() {
 // translation recursive functions
 /* High-level Definitions */
 void trans_Program(TreeNode* cur) {
+    assert(strcmp(cur->name, "Program") == 0);
     trans_ExtDefList(cur->firstChild);
 }
 void trans_ExtDefList(TreeNode* cur) {
+    assert(strcmp(cur->name, "ExtDefList") == 0);
     switch (cur->product_id)
     {
     case 2:
@@ -334,6 +336,7 @@ void trans_ExtDefList(TreeNode* cur) {
     }
 }
 void trans_ExtDef(TreeNode* cur) {
+    assert(strcmp(cur->name, "ExtDef") == 0);
     switch (cur->product_id)
     {
     case 4:
@@ -357,6 +360,7 @@ void trans_ExtDef(TreeNode* cur) {
     }
 }
 void trans_ExtDecList(TreeNode* cur) {
+    assert(strcmp(cur->name, "ExtDecList") == 0);
     switch (cur->product_id)
     {
     case 8:
@@ -375,6 +379,7 @@ void trans_ExtDecList(TreeNode* cur) {
 }
 /* Specifiers */
 void trans_Specifier(TreeNode* cur) {
+    assert(strcmp(cur->name, "Specifier") == 0);
     switch (cur->product_id)
     {
     case 10:
@@ -388,6 +393,7 @@ void trans_Specifier(TreeNode* cur) {
     }
 }
 void trans_StructSpecifier(TreeNode* cur) {
+    assert(strcmp(cur->name, "StructSpecifier") == 0);
     switch (cur->product_id)
     {
     case 12:
@@ -401,6 +407,7 @@ void trans_StructSpecifier(TreeNode* cur) {
     }
 }
 void trans_OptTag(TreeNode* cur) {
+    assert(strcmp(cur->name, "OptTag") == 0);
     switch (cur->product_id)
     {
     case 14:
@@ -412,6 +419,7 @@ void trans_OptTag(TreeNode* cur) {
     }
 }
 void trans_Tag(TreeNode* cur) {
+    assert(strcmp(cur->name, "Tag") == 0);
     switch (cur->product_id)
     {
     case 16:
@@ -422,6 +430,7 @@ void trans_Tag(TreeNode* cur) {
 }
 /* Declarators */
 void trans_VarDec(TreeNode* cur, operand* place) {
+    assert(strcmp(cur->name, "VarDec") == 0);
     switch (cur->product_id)
     {
     case 17:
@@ -436,6 +445,7 @@ void trans_VarDec(TreeNode* cur, operand* place) {
     }
 }
 void trans_FunDec(TreeNode* cur) {
+    assert(strcmp(cur->name, "FunDec") == 0);
     switch (cur->product_id)
     {
     case 19:
@@ -450,6 +460,7 @@ void trans_FunDec(TreeNode* cur) {
 }
 
 void trans_VarList(TreeNode* cur) {
+    assert(strcmp(cur->name, "VarList") == 0);
     switch (cur->product_id)
     {
     case 23:
@@ -465,19 +476,24 @@ void trans_VarList(TreeNode* cur) {
 }
 
 void trans_ParamDec(TreeNode* cur) {
+    assert(strcmp(cur->name, "ParamDec") == 0);
     trans_Specifier(get_k_son(1, cur));
-    trans_VarDec(get_k_son(2, cur));
+    operand* ret = newTmpVar();
+    trans_VarDec(get_k_son(2, cur), ret);
 }
 /* Statemetns */
 void trans_Compst(TreeNode* cur) {
+    assert(strcmp(cur->name, "Compst") == 0);
     trans_DefList(get_k_son(2, cur));
     trans_StmtList(get_k_son(3, cur));
 }
 void trans_StmtList(TreeNode* cur) {
+    assert(strcmp(cur->name, "StmtList") == 0);
     trans_Stmt(get_k_son(1, cur));
     trans_StmtList(get_k_son(2, cur));
 }
 void trans_Stmt(TreeNode* cur) {
+    assert(strcmp(cur->name, "Stmt") == 0);
     switch (cur->product_id)
     {
     case 29:
@@ -505,6 +521,7 @@ void trans_Stmt(TreeNode* cur) {
 }
 /* Local Definitions */
 void trans_DefList(TreeNode* cur) {
+    assert(strcmp(cur->name, "DefList") == 0);
     switch (cur->product_id)
     {
     case 35:
@@ -518,11 +535,13 @@ void trans_DefList(TreeNode* cur) {
     }
 }
 void trans_Def(TreeNode* cur) {
+    assert(strcmp(cur->name, "Def") == 0);
     trans_Specifier(get_k_son(1,cur));
     trans_DecList(get_k_son(2,cur));
 }
 void trans_DecList(TreeNode* cur) {
- switch (cur->product_id)
+    assert(strcmp(cur->name, "DecList") == 0);
+    switch (cur->product_id)
     {
     case 38:
         trans_Dec(get_k_son(1,cur));
@@ -536,14 +555,16 @@ void trans_DecList(TreeNode* cur) {
     }
 }
 void trans_Dec(TreeNode* cur) {
-
+    assert(strcmp(cur->name, "Dec") == 0);
 }
 
 /* Expressions */
 void trans_Exp(TreeNode* cur, operand* place) {
+    assert(strcmp(cur->name, "Exp") == 0);
 
 }
 void trans_Args(TreeNode* cur, argList* argLst) {
+    assert(strcmp(cur->name, "Args") == 0);
 
 }
 void trans_Cond(TreeNode* cur, operand* trueLabel, operand* falseLabel) {
