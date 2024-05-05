@@ -658,7 +658,11 @@ void trans_Exp(TreeNode* cur, operand* place) {
     case 42: {
         operand* variable = newOperand(OPR_VARIABLE, 0, newString(get_k_son(1, cur)->name));
         newIntercode(IR_2_ASSIGN, 2, place, variable);
-        
+        operand* t1 = newTmpVar();
+        trans_Exp(get_k_son(3, cur), t1);
+        // XXX: the following two codes can be reduced
+        newIntercode(IR_2_ASSIGN, 2, variable, t1);
+        newIntercode(IR_2_ASSIGN, 2, place, variable);
         break;
     }
     case 43: {
@@ -668,24 +672,51 @@ void trans_Exp(TreeNode* cur, operand* place) {
         break;
     }
     case 45: {
+        operand* l1 = newLabel();
+        operand* l2 = newLabel();
+        
         break;
     }
     case 46: {
+        operand* t1 = newTmpVar();
+        operand* t2 = newTmpVar();
+        trans_Exp(get_k_son(1, cur), t1);
+        trans_Exp(get_k_son(3, cur), t2);
+        newIntercode(IR_3_ADD, 3, place, t1, t2);
         break;
     }
     case 47: {
+        operand* t1 = newTmpVar();
+        operand* t2 = newTmpVar();
+        trans_Exp(get_k_son(1, cur), t1);
+        trans_Exp(get_k_son(3, cur), t2);
+        newIntercode(IR_4_SUB, 3, place, t1, t2);
         break;
     }
     case 48: {
+        operand* t1 = newTmpVar();
+        operand* t2 = newTmpVar();
+        trans_Exp(get_k_son(1, cur), t1);
+        trans_Exp(get_k_son(3, cur), t2);
+        newIntercode(IR_5_MUL, 3, place, t1, t2);
         break;
     }
     case 49: {
+        operand* t1 = newTmpVar();
+        operand* t2 = newTmpVar();
+        trans_Exp(get_k_son(1, cur), t1);
+        trans_Exp(get_k_son(3, cur), t2);
+        newIntercode(IR_6_DIV, 3, place, t1, t2);
         break;
     }
     case 50: {
         break;
     }
     case 51: {
+        operand* t1 = newTmpVar();
+        trans_Exp(get_k_son(2, cur), t1);
+        operand* zero = newOperand(OPR_CONSTANT, 0, NULL);
+        newIntercode(IR_4_SUB, 3, place, zero, t1);
         break;
     }
     case 52: {
