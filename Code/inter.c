@@ -487,8 +487,19 @@ void trans_Stmt(TreeNode* cur) {
     case 30:
         trans_Compst(get_k_son(1, cur)); 
     case 31:
-        
+        operand* ret = newTmpVar();
+        trans_Exp(get_k_son(2, cur), ret);
+    case 32:
+        //TODO
+        break;
+    case 33:
+        // TODO
+        break;
+    case 34:
+        // TODO
+        break;
     default:
+        assert(0);
         break;
     }
 }
