@@ -428,16 +428,9 @@ void trans_VarDec(TreeNode* cur, operand* place) {
         break;
     case 18:
         break; 
-    case 19:
+    case 119:
         operand* ret = newTmpVar();
         trans_VarDec(get_k_son(1, cur), ret);
-    case 20:
-        operand* ret = newTmpVar();
-        trans_VarDec(get_k_son(1, cur), ret);
-    case 21:
-        break;
-    case 22:
-        break;
     default:
         break;
     }
@@ -448,50 +441,100 @@ void trans_FunDec(TreeNode* cur) {
     case 19:
         trans_VarList(get_k_son(3, cur)); 
         break;
-    
+    case 20:
+        trans_VarDec(get_k_son(3, cur)); 
+        break;
     default:
         break;
     } 
 }
 
 void trans_VarList(TreeNode* cur) {
-    
+    switch (cur->product_id)
+    {
+    case 23:
+        trans_ParamDec(get_k_son(1, cur));
+        trans_VarList(get_k_son(3, cur));
+        break;
+    case 24:
+        trans_ParamDec(get_k_son(1, cur));
+        break;
+    default:
+        break;
+    }
 }
 
 void trans_ParamDec(TreeNode* cur) {
-
+    trans_Specifier(get_k_son(1, cur));
+    trans_VarDec(get_k_son(2, cur));
 }
 /* Statemetns */
 void trans_Compst(TreeNode* cur) {
-
+    trans_DefList(get_k_son(2, cur));
+    trans_StmtList(get_k_son(3, cur));
 }
 void trans_StmtList(TreeNode* cur) {
-
+    trans_Stmt(get_k_son(1, cur));
+    trans_StmtList(get_k_son(2, cur));
 }
 void trans_Stmt(TreeNode* cur) {
-
+    switch (cur->product_id)
+    {
+    case 29:
+        operand* ret = newTmpVar();
+        trans_Exp(get_k_son(1, cur), ret);
+        break;
+    case 30:
+        trans_Compst(get_k_son(1, cur)); 
+    case 31:
+        
+    default:
+        break;
+    }
 }
 /* Local Definitions */
 void trans_DefList(TreeNode* cur) {
-
+    switch (cur->product_id)
+    {
+    case 35:
+        trans_Dec(get_k_son(1,cur));
+        trans_Dec(get_k_son(2,cur));
+        break;
+    case 36:
+        break;
+    default:
+        break;
+    }
 }
 void trans_Def(TreeNode* cur) {
-
+    trans_Specifier(get_k_son(1,cur));
+    trans_DecList(get_k_son(2,cur));
 }
 void trans_DecList(TreeNode* cur) {
-
+ switch (cur->product_id)
+    {
+    case 38:
+        trans_Dec(get_k_son(1,cur));
+        break;
+    case 39:
+        trans_Dec(get_k_son(1,cur));
+        trans_DecList(get_k_son(3,cur));
+        break;
+    default:
+        break;
+    }
 }
 void trans_Dec(TreeNode* cur) {
 
 }
 
 /* Expressions */
-void trans_Exp(int prod_id, TreeNode* cur, operand* place) {
+void trans_Exp(TreeNode* cur, operand* place) {
 
 }
-void trans_Args(int prod_id, TreeNode* cur, argList* argLst) {
+void trans_Args(TreeNode* cur, argList* argLst) {
 
 }
-void trans_Cond(int prod_id, TreeNode* cur, operand* trueLabel, operand* falseLabel) {
+void trans_Cond(TreeNode* cur, operand* trueLabel, operand* falseLabel) {
 
 }
