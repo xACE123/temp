@@ -322,8 +322,8 @@ void trans_ExtDefList(TreeNode* cur) {
     switch (cur->product_id)
     {
     case 2:
-        trans_Def(get_k_son(cur, 1));
-        trans_ExtDecList(get_k_son(cur, 2));
+        trans_Def(get_k_son(1, cur));
+        trans_ExtDecList(get_k_son(2, cur));
         break;
     case 3:
         // epsilon
@@ -337,32 +337,36 @@ void trans_ExtDef(TreeNode* cur) {
     switch (cur->product_id)
     {
     case 4:
-        trans_Specifier(get_k_son(cur, 1));
-        trans_ExtDecList(get_k_son(cur, 2));
+        trans_Specifier(get_k_son(1, cur));
+        trans_ExtDecList(get_k_son(2, cur));
         break;
     case 5:
-        trans_Specifier(get_k_son(cur, 1));
+        trans_Specifier(get_k_son(1, cur));
         break;
     case 6:
-        trans_Specifier(get_k_son(cur, 1));
-        trans_FunDec(get_k_son(cur, 2));
-        trans_Compst(get_k_son(cur, 3));
+        trans_Specifier(get_k_son(1, cur));
+        trans_FunDec(get_k_son(2, cur));
+        trans_Compst(get_k_son(3, cur));
         break;
     case 7:
-        trans_Specifier(get_k_son(cur, 1));
-        trans_FunDec(get_k_son(cur, 2));
+        trans_Specifier(get_k_son(1, cur));
+        trans_FunDec(get_k_son(2, cur));
         break;
     default:
         break;
     }
 }
 void trans_ExtDecList(TreeNode* cur) {
-    switch (expression)
+    switch (cur->product_id)
     {
-    case /* constant-expression */:
-        /* code */
+    case 8:
+        operand* ret = newTmpVar();
+        trans_VarDec(get_k_son(1, cur), ret);
         break;
-    
+    case 9:
+        operand* ret = newTmpVar();
+        trans_VarDec(get_k_son(1, cur), ret); 
+        break;
     default:
         break;
     }
