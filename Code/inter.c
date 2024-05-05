@@ -366,17 +366,39 @@ void trans_ExtDecList(TreeNode* cur) {
     case 9:
         operand* ret = newTmpVar();
         trans_VarDec(get_k_son(1, cur), ret); 
+        trans_ExtDecList(get_k_son(3, cur));
         break;
     default:
+        assert(0);
         break;
     }
 }
 /* Specifiers */
 void trans_Specifier(TreeNode* cur) {
-
+    switch (cur->product_id)
+    {
+    case 10:
+        break;
+    case 11:
+        trans_StructSpecifier(get_k_son(1, cur));
+        break; 
+    default:
+        assert(0);
+        break;
+    }
 }
 void trans_StructSpecifier(TreeNode* cur) {
-
+    switch (cur->product_id)
+    {
+    case 12:
+        trans_OptTag(get_k_son(2, cur));
+        trans_DefList(get_k_son(4, cur));
+        break;
+    case 13:
+        trans_Tag(get_k_son(2, cur));
+    default:
+        break;
+    }
 }
 void trans_OptTag(TreeNode* cur) {
 
