@@ -999,7 +999,7 @@ YY_RULE_SETUP
 case 8:
 YY_RULE_SETUP
 #line 193 "./lexical.l"
-{op_printf("RELOP\n"); yylval.node = createLeafNode(1e9+7,yylineno, TOKEN_OTHER, "RELOP"); prev_token = t_relop; return RELOP;}
+{op_printf("RELOP\n"); yylval.node = createLeafNode(1e9+7,yylineno, TOKEN_OTHER, yytext); prev_token = t_relop; return RELOP;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP

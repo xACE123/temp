@@ -2,8 +2,8 @@
 
 extern int syntaxError;
 extern int lexicalError;
-const int op_verbose = FALSE;
-// const int op_verbose = TRUE;
+// const int op_verbose = FALSE;
+const int op_verbose = TRUE;
 
 //return the k-th child of the input TreeNode
 TreeNode* get_k_son(int k,TreeNode* p){

@@ -71,7 +71,7 @@ void printOperand(FILE* fout, operand* opr) {
     }
 } 
 
-intercode* newIntercode(ir_type type, int argc, ...) {
+void newIntercode(ir_type type, int argc, ...) {
     intercode* code = (intercode*)malloc(sizeof(intercode));
     code->type = type;
     code->x = NULL;
@@ -162,12 +162,13 @@ intercode* newIntercode(ir_type type, int argc, ...) {
         break;
     }
     va_end(vaList);
-    return code;
+    // now insert the code
+    insertIntercode(code);
 }
 
 
 void printInterCode(FILE* fp) {
-    fprintf(fp, "printInterCode\n");
+    // fprintf(fp, "printInterCode\n");
     intercodeNode* cur = ir_list.head;
     while(cur != NULL) {
         intercode* code = cur->code;
@@ -288,13 +289,23 @@ void printInterCode(FILE* fp) {
 }
 
 void insertIntercode(intercode* code) {
-    intercodeNode* last = ir_list.cur;
-    intercodeNode* cur = (intercodeNode*)malloc(sizeof(intercodeNode)); 
-    cur->code = code;
-    cur->next = NULL;
-    cur->prev = last;
-    last->next = cur;
-    ir_list.cur = cur;
+    if (ir_list.head == NULL) {
+        intercodeNode* cu = (intercodeNode*)malloc(sizeof(intercodeNode)); 
+        cu->code = code;
+        cu->next = NULL;
+        cu->prev = NULL;
+        ir_list.head = cu;
+        ir_list.cur = cu;
+    }
+    else {
+        intercodeNode* last = ir_list.cur;
+        intercodeNode* cur = (intercodeNode*)malloc(sizeof(intercodeNode)); 
+        cur->code = code;
+        cur->next = NULL;
+        cur->prev = last;
+        last->next = cur;
+        ir_list.cur = cur;
+    }
 }
 
 operand* newTmpVar() {
@@ -454,6 +465,7 @@ void trans_VarDec(TreeNode* cur, operand* place) {
     case 18:
         break; 
     case 119: {
+        // TODO: need to generate DEC [size] 
         operand* ret = newTmpVar();
         trans_VarDec(get_k_son(1, cur), ret);
         break;
@@ -466,13 +478,20 @@ void trans_VarDec(TreeNode* cur, operand* place) {
 void trans_FunDec(TreeNode* cur) {
     op_printf("[%d] %s\n", cur->lineno, cur->name);
     assert(strcmp(cur->name, "FunDec") == 0);
+    // generate FUNCTION code
+    operand* function = newOperand(OPR_VARIABLE, 0, newString(get_k_son(1, cur)->name));
+    newIntercode(IR_1_FUNCTION, 1, function);
     switch (cur->product_id)
     {
     case 19:
-        trans_VarList(get_k_son(3, cur)); 
+        // TODO: need to lookup the function symbol table to get the funciton params
+        // TODO: need to generate PARAM x
+        // trans_VarList(get_k_son(3, cur)); 
         break;
     case 20:
-        trans_VarList(get_k_son(3, cur)); 
+        // TODO: need to lookup the function symbol table to get the funciton params
+        // TODO: need to generate PARAM x
+        // trans_VarList(get_k_son(3, cur)); 
         break;
     case 21:
         break;
@@ -484,6 +503,7 @@ void trans_FunDec(TreeNode* cur) {
     } 
 }
 
+// XXX: this function may be useless
 void trans_VarList(TreeNode* cur) {
     op_printf("[%d] %s\n", cur->lineno, cur->name);
     assert(strcmp(cur->name, "VarList") == 0);
@@ -502,6 +522,7 @@ void trans_VarList(TreeNode* cur) {
     }
 }
 
+// XXX: this function may be useless
 void trans_ParamDec(TreeNode* cur) {
     op_printf("[%d] %s\n", cur->lineno, cur->name);
     assert(strcmp(cur->name, "ParamDec") == 0);
@@ -636,7 +657,7 @@ void trans_Dec(TreeNode* cur) {
         trans_VarDec(get_k_son(1, cur), ret);
         break;
     }
-    case 41: {
+    case 41: {  
         operand* t1 = newTmpVar();
         trans_VarDec(get_k_son(1, cur), t1);
         operand* t2 = newTmpVar();
@@ -666,15 +687,39 @@ void trans_Exp(TreeNode* cur, operand* place) {
         break;
     }
     case 43: {
+        operand* l1 = newLabel();
+        operand* l2 = newLabel();
+        operand* zero = newOperand(OPR_CONSTANT, 0, NULL);
+        newIntercode(IR_2_ASSIGN, 2, place, zero);
+        trans_Cond(cur, l1, l2);
+        newIntercode(IR_0_LABEL, 1, l1);
+        operand* one = newOperand(OPR_CONSTANT, 1, NULL);
+        newIntercode(IR_2_ASSIGN, 2, place, one);
+        newIntercode(IR_0_LABEL, 1, l2);
         break;
     }
     case 44: {
+        operand* l1 = newLabel();
+        operand* l2 = newLabel();
+        operand* zero = newOperand(OPR_CONSTANT, 0, NULL);
+        newIntercode(IR_2_ASSIGN, 2, place, zero);
+        trans_Cond(cur, l1, l2);
+        newIntercode(IR_0_LABEL, 1, l1);
+        operand* one = newOperand(OPR_CONSTANT, 1, NULL);
+        newIntercode(IR_2_ASSIGN, 2, place, one);
+        newIntercode(IR_0_LABEL, 1, l2);
         break;
     }
     case 45: {
         operand* l1 = newLabel();
         operand* l2 = newLabel();
-        
+        operand* zero = newOperand(OPR_CONSTANT, 0, NULL);
+        newIntercode(IR_2_ASSIGN, 2, place, zero);
+        trans_Cond(cur, l1, l2);
+        newIntercode(IR_0_LABEL, 1, l1);
+        operand* one = newOperand(OPR_CONSTANT, 1, NULL);
+        newIntercode(IR_2_ASSIGN, 2, place, one);
+        newIntercode(IR_0_LABEL, 1, l2);
         break;
     }
     case 46: {
@@ -710,6 +755,7 @@ void trans_Exp(TreeNode* cur, operand* place) {
         break;
     }
     case 50: {
+        trans_Exp(get_k_son(2, cur), place);
         break;
     }
     case 51: {
@@ -720,27 +766,92 @@ void trans_Exp(TreeNode* cur, operand* place) {
         break;
     }
     case 52: {
+        operand* l1 = newLabel();
+        operand* l2 = newLabel();
+        operand* zero = newOperand(OPR_CONSTANT, 0, NULL);
+        newIntercode(IR_2_ASSIGN, 2, place, zero);
+        trans_Cond(cur, l1, l2);
+        newIntercode(IR_0_LABEL, 1, l1);
+        operand* one = newOperand(OPR_CONSTANT, 1, NULL);
+        newIntercode(IR_2_ASSIGN, 2, place, one);
+        newIntercode(IR_0_LABEL, 1, l2);
         break;
     }
     case 53: {
+        // ID LP Args RP
+        operand* function = newOperand(OPR_VARIABLE, 0, newString(get_k_son(1, cur)->name));
+        argList* _argList = (argList*)malloc(sizeof(argList));
+        _argList->head = NULL;
+        _argList->cur = NULL;
+        trans_Args(get_k_son(3, cur), _argList);
+        if (strcmp(function->u.name, "write") == 0) {
+            newIntercode(IR_18_WRITE, 1, _argList->head->opr);
+            operand* zero = newOperand(OPR_CONSTANT, 0, NULL);
+            newIntercode(IR_2_ASSIGN, 2, place, zero);
+        }
+        else {
+            // ARG arg_list[i]
+            for (argNode* cur = _argList->head; cur != NULL; cur = cur->nxt) {
+                newIntercode(IR_14_ARG, 1, cur->opr);
+            }
+            newIntercode(IR_15_CALL, 2, place, function);
+        }
         break;
     }
     case 54: {
+        // SID LP Args RP
+        operand* function = newOperand(OPR_VARIABLE, 0, newString(get_k_son(1, cur)->name));
+        argList* _argList = (argList*)malloc(sizeof(argList));
+        _argList->head = NULL;
+        _argList->cur = NULL;
+        trans_Args(get_k_son(3, cur), _argList);
+        if (strcmp(function->u.name, "write") == 0) {
+            newIntercode(IR_18_WRITE, 1, _argList->head->opr);
+            operand* zero = newOperand(OPR_CONSTANT, 0, NULL);
+            newIntercode(IR_2_ASSIGN, 2, place, zero);
+        }
+        else {
+            // ARG arg_list[i]
+            for (argNode* cur = _argList->head; cur != NULL; cur = cur->nxt) {
+                newIntercode(IR_14_ARG, 1, cur->opr);
+            }
+            newIntercode(IR_15_CALL, 2, place, function);
+        }
         break;
     }
     case 55: {
+        // ID LP RP
+        operand* function = newOperand(OPR_VARIABLE, 0, newString(get_k_son(1, cur)->name));
+        if (strcmp(function->u.name, "read") == 0) {
+            newIntercode(IR_17_READ, 1, place);
+        }
+        else {
+            newIntercode(IR_15_CALL, 2, place, function);
+        }
         break;
     }
     case 56: {
+        // SID LP RP
+        operand* function = newOperand(OPR_VARIABLE, 0, newString(get_k_son(1, cur)->name));
+        if (strcmp(function->u.name, "read") == 0) {
+            newIntercode(IR_17_READ, 1, place);
+        }
+        else {
+            newIntercode(IR_15_CALL, 2, place, function);
+        }
         break;
     }
     case 57: {
         break;
     }
     case 58: {
+        intercodeErr = TRUE;
+        IR_error();
         break;
     }
     case 59: {
+        intercodeErr = TRUE;
+        IR_error();
         break;
     }
     case 60: {
@@ -749,6 +860,8 @@ void trans_Exp(TreeNode* cur, operand* place) {
         break;
     }
     case 61: {
+        operand* variable = newOperand(OPR_VARIABLE, 0, newString(get_k_son(1, cur)->name));
+        newIntercode(IR_2_ASSIGN, 2, place, variable);
         break;
     }
     case 62: {
@@ -757,6 +870,9 @@ void trans_Exp(TreeNode* cur, operand* place) {
         break;
     }
     case 63: {
+        // float should not appear
+        intercodeErr = TRUE;
+        IR_error();
         break;
     }
     default:
@@ -769,6 +885,42 @@ void trans_Exp(TreeNode* cur, operand* place) {
 void trans_Args(TreeNode* cur, argList* argLst) {
     op_printf("[%d] %s\n", cur->lineno, cur->name);
     assert(strcmp(cur->name, "Args") == 0);
+    if (cur->product_id == 64) {
+        trans_Args(get_k_son(3, cur), argLst);
+        operand* t1 = newTmpVar();
+        trans_Exp(get_k_son(1, cur), t1);
+        if (argLst->head == NULL) {
+            argLst->head = (argNode*)malloc(sizeof(argNode));
+            argLst->head->nxt = NULL;
+            argLst->head->opr = t1;
+            argLst->cur = argLst->head;
+        }
+        else {
+            argLst->cur->nxt = (argNode*)malloc(sizeof(argNode));
+            argLst->cur = argLst->cur->nxt;
+            argLst->cur->opr = t1;
+            argLst->cur->nxt = NULL;
+        }
+    }
+    else if (cur->product_id == 65) {
+        operand* t1 = newTmpVar();
+        trans_Exp(get_k_son(1, cur), t1);
+        if (argLst->head == NULL) {
+            argLst->head = (argNode*)malloc(sizeof(argNode));
+            argLst->head->nxt = NULL;
+            argLst->head->opr = t1;
+            argLst->cur = argLst->head;
+        }
+        else {
+            argLst->cur->nxt = (argNode*)malloc(sizeof(argNode));
+            argLst->cur = argLst->cur->nxt;
+            argLst->cur->opr = t1;
+            argLst->cur->nxt = NULL;
+        }
+    }
+    else {
+        assert(0);
+    }
 
 }
 
@@ -815,4 +967,8 @@ void trans_Cond(TreeNode* cur, operand* trueLabel, operand* falseLabel) {
     
     }
     }
+}
+
+void IR_error() {
+    perror("Cannot Translate.\n");
 }

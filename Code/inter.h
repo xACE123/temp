@@ -99,6 +99,8 @@ typedef struct argList {
 
 char* newString(char* str);
 
+void IR_error();
+
 
 //*************************** functions ***************************************
 
@@ -145,7 +147,7 @@ void printInterCode(FILE* fout);
 operand* newOperand(opr_type type, int val, char* name);
 void printOperand(FILE* fout, operand* opr);
 
-intercode* newIntercode(ir_type type, int argc, ...);
+void newIntercode(ir_type type, int argc, ...);
 void insertIntercode(intercode* code);
 
 operand* newTmpVar();
