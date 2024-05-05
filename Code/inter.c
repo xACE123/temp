@@ -326,37 +326,101 @@ void trans_ExtDefList(TreeNode* cur) {
         trans_ExtDecList(get_k_son(cur, 2));
         break;
     case 3:
+        // epsilon
+        break;
+    default:
+        assert(0);
+        break;
+    }
+}
+void trans_ExtDef(TreeNode* cur) {
+    switch (cur->product_id)
+    {
+    case 4:
+        trans_Specifier(get_k_son(cur, 1));
+        trans_ExtDecList(get_k_son(cur, 2));
+        break;
+    case 5:
+        trans_Specifier(get_k_son(cur, 1));
+        break;
+    case 6:
+        trans_Specifier(get_k_son(cur, 1));
+        trans_FunDec(get_k_son(cur, 2));
+        trans_Compst(get_k_son(cur, 3));
+        break;
+    case 7:
+        trans_Specifier(get_k_son(cur, 1));
+        trans_FunDec(get_k_son(cur, 2));
         break;
     default:
         break;
     }
 }
-void trans_ExtDef(TreeNode* cur) {
-
-}
 void trans_ExtDecList(TreeNode* cur) {
-
+    switch (expression)
+    {
+    case /* constant-expression */:
+        /* code */
+        break;
+    
+    default:
+        break;
+    }
 }
 /* Specifiers */
-void trans_Specifier(TreeNode* cur);
-void trans_StructSpecifier(TreeNode* cur);
-void trans_OptTag(TreeNode* cur);
-void trans_Tag(TreeNode* cur);
+void trans_Specifier(TreeNode* cur) {
+
+}
+void trans_StructSpecifier(TreeNode* cur) {
+
+}
+void trans_OptTag(TreeNode* cur) {
+
+}
+void trans_Tag(TreeNode* cur) {
+
+}
 /* Declarators */
-void trans_VarDec(TreeNode* cur, operand* place);
-void trans_FunDec(TreeNode* cur);
-void trans_ParamDec(TreeNode* cur);
+void trans_VarDec(TreeNode* cur, operand* place) {
+
+}
+void trans_FunDec(TreeNode* cur) {
+
+}
+void trans_ParamDec(TreeNode* cur) {
+
+}
 /* Statemetns */
-void trans_Compst(TreeNode* cur);
-void trans_StmtList(TreeNode* cur);
-void trans_Stmt(TreeNode* cur);
+void trans_Compst(TreeNode* cur) {
+
+}
+void trans_StmtList(TreeNode* cur) {
+
+}
+void trans_Stmt(TreeNode* cur) {
+
+}
 /* Local Definitions */
-void trans_DefList(TreeNode* cur);
-void trans_Def(TreeNode* cur);
-void trans_DecList(TreeNode* cur);
-void trans_Dec(TreeNode* cur);
+void trans_DefList(TreeNode* cur) {
+
+}
+void trans_Def(TreeNode* cur) {
+
+}
+void trans_DecList(TreeNode* cur) {
+
+}
+void trans_Dec(TreeNode* cur) {
+
+}
 
 /* Expressions */
-void trans_Exp(int prod_id, TreeNode* cur, operand* place);
-void trans_Args(int prod_id, TreeNode* cur, argList* argLst);
-void trans_Cond(int prod_id, TreeNode* cur, operand* trueLabel, operand* falseLabel);
+void trans_Exp(int prod_id, TreeNode* cur, operand* place) {
+
+}
+void trans_Args(int prod_id, TreeNode* cur, argList* argLst) {
+
+}
+void trans_Cond(int prod_id, TreeNode* cur, operand* trueLabel, operand* falseLabel) {
+
+}
