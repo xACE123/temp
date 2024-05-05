@@ -13,6 +13,8 @@
 #include <string.h>
 #include "SyntaxTree.h"
 
+#define TMPNAMELEN 20
+
 //*************************** data structures *********************************
 
 typedef enum ir_type {
@@ -93,26 +95,59 @@ typedef struct argList {
     argNode* cur;
 } argList;
 
+//*************************** helper function ******************************
 
+char* newString(char* str);
 
 
 //*************************** functions ***************************************
 
+// init the intermediate representation table
 void init_ir();
 
-// the traverse function for intercode geneartion
-void genInterCode(TreeNode* cur);
+/* High-level Definitions */
+void trans_Program(TreeNode* cur);
+void trans_ExtDefList(TreeNode* cur);
+void trans_ExtDef(TreeNode* cur);
+void trans_ExtDecList(TreeNode* cur);
+/* Specifiers */
+void trans_Specifier(TreeNode* cur);
+void trans_StructSpecifier(TreeNode* cur);
+void trans_OptTag(TreeNode* cur);
+void trans_Tag(TreeNode* cur);
+/* Declarators */
+void trans_VarDec(TreeNode* cur, operand* place);
+void trans_FunDec(TreeNode* cur);
+void trans_ParamDec(TreeNode* cur);
+/* Statemetns */
+void trans_Compst(TreeNode* cur);
+void trans_StmtList(TreeNode* cur);
+void trans_Stmt(TreeNode* cur);
+/* Local Definitions */
+void trans_DefList(TreeNode* cur);
+void trans_Def(TreeNode* cur);
+void trans_DecList(TreeNode* cur);
+void trans_Dec(TreeNode* cur);
+
+/* Expressions */
+void trans_Exp(int prod_id, TreeNode* cur, operand* place);
+void trans_Args(int prod_id, TreeNode* cur, argList* argLst);
+void trans_Cond(int prod_id, TreeNode* cur, operand* trueLabel, operand* falseLabel);
+
+
+
+
 
 // print the intercodeList to the file 
 void printInterCode(FILE* fout);
 
-operand* newOperand(opr_type type, int argc, ...);
+operand* newOperand(opr_type type, int val, char* name);
 void printOperand(FILE* fout, operand* opr);
 
 intercode* newIntercode(ir_type type, int argc, ...);
 void insertIntercode(intercode* code);
 
-
-
+operand* newTmpVar();
+operand* newLabel();
 
 #endif // INTER_H

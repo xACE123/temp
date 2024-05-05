@@ -1,12 +1,22 @@
 /*
 * @author: yunzinan
-* @date: 2024/3/9
+* @date: 2024/5/5
 * @abstract: source file of the syntax tree.
 */
 
 #include "inter.h"
 
+// symbol tables: import from semantic.c
+
+
 intercodeList ir_list;
+int intercodeErr = FALSE;
+
+char* newString(char* str) {
+    char *ret = (char*)malloc((strlen(str) + 1) * sizeof(char));
+    strcpy(ret, str);
+    return ret;
+}
 
 
 void init_ir() {
@@ -16,10 +26,27 @@ void init_ir() {
     ir_list.num_tmp_var = 0;
 }
 
-operand* newOperand(opr_type type, int argc, ...) {
+operand* newOperand(opr_type type, int val, char* name) {
     operand* opr = (operand*)malloc(sizeof(operand));
     opr->type = type;
-    // TODO
+    switch (opr->type)
+    {
+    case OPR_VARIABLE:
+        opr->u.name = name;
+        break; 
+    case OPR_CONSTANT:
+        opr->u.val = val;
+        break;
+    case OPR_LABEL:
+        opr->u.name = name;
+        break;
+    case OPR_RELOP:
+        opr->u.name = name;
+        break;
+    default:
+        assert(0);
+        break;
+    }
     return opr;
 }
 
@@ -270,7 +297,66 @@ void insertIntercode(intercode* code) {
     ir_list.cur = cur;
 }
 
-// traverse functions
-void genInterCode(TreeNode* cur) {
+operand* newTmpVar() {
+    char t_name[TMPNAMELEN] = {0};
+    sprintf(t_name, "t%d", ir_list.num_tmp_var);
+    ir_list.num_tmp_var += 1;
+    operand* ret = newOperand(OPR_VARIABLE, 0, newString(t_name));
+    return ret;
+}
+
+operand* newLabel() {
+    char t_name[TMPNAMELEN] = {0};
+    sprintf(t_name, "label%d", ir_list.num_label);
+    ir_list.num_label += 1;
+    operand* ret = newOperand(OPR_LABEL, 0, newString(t_name));
+    return ret;
+}
+
+// translation recursive functions
+/* High-level Definitions */
+void trans_Program(TreeNode* cur) {
+    trans_ExtDefList(cur->firstChild);
+}
+void trans_ExtDefList(TreeNode* cur) {
+    switch (cur->product_id)
+    {
+    case 2:
+        trans_Def(get_k_son(cur, 1));
+        trans_ExtDecList(get_k_son(cur, 2));
+        break;
+    case 3:
+        break;
+    default:
+        break;
+    }
+}
+void trans_ExtDef(TreeNode* cur) {
 
 }
+void trans_ExtDecList(TreeNode* cur) {
+
+}
+/* Specifiers */
+void trans_Specifier(TreeNode* cur);
+void trans_StructSpecifier(TreeNode* cur);
+void trans_OptTag(TreeNode* cur);
+void trans_Tag(TreeNode* cur);
+/* Declarators */
+void trans_VarDec(TreeNode* cur, operand* place);
+void trans_FunDec(TreeNode* cur);
+void trans_ParamDec(TreeNode* cur);
+/* Statemetns */
+void trans_Compst(TreeNode* cur);
+void trans_StmtList(TreeNode* cur);
+void trans_Stmt(TreeNode* cur);
+/* Local Definitions */
+void trans_DefList(TreeNode* cur);
+void trans_Def(TreeNode* cur);
+void trans_DecList(TreeNode* cur);
+void trans_Dec(TreeNode* cur);
+
+/* Expressions */
+void trans_Exp(int prod_id, TreeNode* cur, operand* place);
+void trans_Args(int prod_id, TreeNode* cur, argList* argLst);
+void trans_Cond(int prod_id, TreeNode* cur, operand* trueLabel, operand* falseLabel);

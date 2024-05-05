@@ -68,13 +68,14 @@ int main(int argc, char** argv) {
     if ((!lexicalError) && (!syntaxError)) {
        // no problem detected, therefore the syntax tree will be printed.
        // printf("bingo! syntax tree will be printed\n");
-       // printSyntaxTree(root,0);
-       fdfs(root);
-       // printSyntaxTree(root,0);
+       printSyntaxTree(root,0);
+    //    fdfs(root);
+    //    printSyntaxTree(root,0);
        // no error so far, traverse the tree to generate the intercode
-       genInterCode(root);
+    //    init_ir();
+    //    trans_Program(root);
        // then print the intercode to the output file
-       printInterCode(fout);
+    //    printInterCode(fout);
     }
     return 0;
 }
