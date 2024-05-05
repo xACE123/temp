@@ -656,6 +656,9 @@ void trans_Exp(TreeNode* cur, operand* place) {
     switch (cur->product_id)
     {
     case 42: {
+        operand* variable = newOperand(OPR_VARIABLE, 0, newString(get_k_son(1, cur)->name));
+        newIntercode(IR_2_ASSIGN, 2, place, variable);
+        
         break;
     }
     case 43: {
@@ -710,12 +713,16 @@ void trans_Exp(TreeNode* cur, operand* place) {
         break;
     }
     case 60: {
+        operand* variable = newOperand(OPR_VARIABLE, 0, newString(get_k_son(1, cur)->name));
+        newIntercode(IR_2_ASSIGN, 2, place, variable);
         break;
     }
     case 61: {
         break;
     }
     case 62: {
+        operand* value = newOperand(OPR_CONSTANT, atoi(get_k_son(1, cur)->name), NULL);
+        newIntercode(IR_2_ASSIGN, 2, place, value);
         break;
     }
     case 63: {
