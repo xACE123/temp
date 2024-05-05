@@ -118,6 +118,7 @@ void trans_Tag(TreeNode* cur);
 /* Declarators */
 void trans_VarDec(TreeNode* cur, operand* place);
 void trans_FunDec(TreeNode* cur);
+void trans_VarList(TreeNode* cur);
 void trans_ParamDec(TreeNode* cur);
 /* Statemetns */
 void trans_Compst(TreeNode* cur);

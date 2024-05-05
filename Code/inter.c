@@ -443,8 +443,21 @@ void trans_VarDec(TreeNode* cur, operand* place) {
     }
 }
 void trans_FunDec(TreeNode* cur) {
-
+    switch (cur->product_id)
+    {
+    case 19:
+        trans_VarList(get_k_son(3, cur)); 
+        break;
+    
+    default:
+        break;
+    } 
 }
+
+void trans_VarList(TreeNode* cur) {
+    
+}
+
 void trans_ParamDec(TreeNode* cur) {
 
 }
