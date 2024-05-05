@@ -401,14 +401,46 @@ void trans_StructSpecifier(TreeNode* cur) {
     }
 }
 void trans_OptTag(TreeNode* cur) {
-
+    switch (cur->product_id)
+    {
+    case 14:
+        break;
+    case 15:
+        break; 
+    default:
+        break;
+    }
 }
 void trans_Tag(TreeNode* cur) {
-
+    switch (cur->product_id)
+    {
+    case 16:
+        break;
+    default:
+        break;
+    }
 }
 /* Declarators */
 void trans_VarDec(TreeNode* cur, operand* place) {
-
+    switch (cur->product_id)
+    {
+    case 17:
+        break;
+    case 18:
+        break; 
+    case 19:
+        operand* ret = newTmpVar();
+        trans_VarDec(get_k_son(1, cur), ret);
+    case 20:
+        operand* ret = newTmpVar();
+        trans_VarDec(get_k_son(1, cur), ret);
+    case 21:
+        break;
+    case 22:
+        break;
+    default:
+        break;
+    }
 }
 void trans_FunDec(TreeNode* cur) {
 
