@@ -547,15 +547,40 @@ void trans_Stmt(TreeNode* cur) {
         trans_Exp(get_k_son(2, cur), ret);
         break;
     }
-    case 32:
-        //TODO
+    case 32:{
+        operand* truelabel = newLabel();
+        operand* falselabel = newLabel();
+        trans_Cond(get_k_son(3, cur), truelabel, falselabel);
+        newIntercode(IR_0_LABEL, 1, truelabel);
+        trans_Stmt(get_k_son(5, cur));
+        newIntercode(IR_0_LABEL, 1, falselabel);
         break;
-    case 33:
-        // TODO
+    }
+    case 33: {
+        operand* l1 = newLabel();
+        operand* l2 = newLabel();
+        operand* l3 = newLabel();
+        trans_Cond(get_k_son(3, cur), l1, l2);
+        newIntercode(IR_0_LABEL, 1, l1);
+        trans_Stmt(get_k_son(5, cur));
+        newIntercode(IR_10_GOTO, 1, l3);
+        newIntercode(IR_0_LABEL, 1, l2);
+        trans_Stmt(get_k_son(7, cur));
+        newIntercode(IR_0_LABEL, 1, l3);
         break;
-    case 34:
-        // TODO
+    }
+    case 34: {
+        operand* l1 = newLabel();
+        operand* l2 = newLabel();
+        operand* l3 = newLabel();
+        newIntercode(IR_0_LABEL, 1, l1);
+        trans_Cond(get_k_son(3, cur), l1, l2);
+        newIntercode(IR_0_LABEL, 1, l2);
+        trans_Stmt(get_k_son(5, cur));
+        newIntercode(IR_10_GOTO, 1, l1);
+        newIntercode(IR_0_LABEL, 1, l3);
         break;
+    }
     default:
         assert(0);
         break;
@@ -604,12 +629,103 @@ void trans_DecList(TreeNode* cur) {
 void trans_Dec(TreeNode* cur) {
     op_printf("[%d] %s\n", cur->lineno, cur->name);
     assert(strcmp(cur->name, "Dec") == 0);
+    switch (cur->product_id)
+    {
+    case 40: {
+        operand* ret = newTmpVar();
+        trans_VarDec(get_k_son(1, cur), ret);
+        break;
+    }
+    case 41: {
+        operand* t1 = newTmpVar();
+        trans_VarDec(get_k_son(1, cur), t1);
+        operand* t2 = newTmpVar();
+        trans_Exp(get_k_son(3, cur), t2); 
+        // VarDec := Exp
+        break; 
+    }
+    default:
+        break;
+    }
 }
 
 /* Expressions */
 void trans_Exp(TreeNode* cur, operand* place) {
     op_printf("[%d] %s\n", cur->lineno, cur->name);
     assert(strcmp(cur->name, "Exp") == 0);
+    switch (cur->product_id)
+    {
+    case 42: {
+        break;
+    }
+    case 43: {
+        break;
+    }
+    case 44: {
+        break;
+    }
+    case 45: {
+        break;
+    }
+    case 46: {
+        break;
+    }
+    case 47: {
+        break;
+    }
+    case 48: {
+        break;
+    }
+    case 49: {
+        break;
+    }
+    case 50: {
+        break;
+    }
+    case 51: {
+        break;
+    }
+    case 52: {
+        break;
+    }
+    case 53: {
+        break;
+    }
+    case 54: {
+        break;
+    }
+    case 55: {
+        break;
+    }
+    case 56: {
+        break;
+    }
+    case 57: {
+        break;
+    }
+    case 58: {
+        break;
+    }
+    case 59: {
+        break;
+    }
+    case 60: {
+        break;
+    }
+    case 61: {
+        break;
+    }
+    case 62: {
+        break;
+    }
+    case 63: {
+        break;
+    }
+    default:
+        assert(0);
+        break;
+    }
+
 
 }
 void trans_Args(TreeNode* cur, argList* argLst) {
@@ -617,6 +733,48 @@ void trans_Args(TreeNode* cur, argList* argLst) {
     assert(strcmp(cur->name, "Args") == 0);
 
 }
-void trans_Cond(TreeNode* cur, operand* trueLabel, operand* falseLabel) {
 
+void trans_Cond(TreeNode* cur, operand* trueLabel, operand* falseLabel) {
+    assert(strcmp(cur->name, "Exp") == 0);
+    switch (cur->product_id)
+    {
+    case 45:{
+        operand* t1 = newTmpVar();
+        operand* t2 = newTmpVar();
+        trans_Exp(get_k_son(1, cur), t1);
+        trans_Exp(get_k_son(3, cur), t2);
+        operand* op = newOperand(OPR_RELOP, 0, newString(get_k_son(2, cur)->name));
+        newIntercode(IR_11_IF, 4, t1, t2, trueLabel, op);
+        newIntercode(IR_10_GOTO, 1, falseLabel);
+        break;
+    }
+    case 52:{
+        trans_Cond(cur, falseLabel, trueLabel);
+        break;
+    }
+    case 43:{
+        operand* l1 = newLabel();
+        trans_Cond(get_k_son(1, cur), l1, falseLabel);
+        newIntercode(IR_0_LABEL, 1, l1);
+        trans_Cond(get_k_son(3, cur), trueLabel, falseLabel);
+        break;
+    }
+    case 44:{
+        operand* l1 = newLabel();
+        trans_Cond(get_k_son(1, cur), trueLabel, l1);
+        newIntercode(IR_0_LABEL, 1, l1);
+        trans_Cond(get_k_son(3, cur), trueLabel, falseLabel);
+        break; 
+    }
+    default:{
+        operand* t1 = newTmpVar();
+        operand* t2 = newOperand(OPR_CONSTANT, 0, NULL);
+        operand* op = newOperand(OPR_RELOP, 0, newString("!="));
+        trans_Exp(cur, t1);
+        newIntercode(IR_11_IF, 4, t1, t2, trueLabel, op);
+        newIntercode(IR_10_GOTO, 1, falseLabel); 
+        break;
+    
+    }
+    }
 }

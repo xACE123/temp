@@ -189,7 +189,7 @@ FLOAT {digit}+"."{digit}+
 {SEMI} {op_printf(";\n"); yylval.node = createLeafNode(1e9+7,yylineno, TOKEN_OTHER, "SEMI"); prev_token = t_semi; return SEMI;}
 {COMMA} {op_printf(",\n"); yylval.node = createLeafNode(1e9+7,yylineno, TOKEN_OTHER, "COMMA"); prev_token = t_comma; return COMMA;}
 {ASSIGNOP} {op_printf("=\n"); yylval.node = createLeafNode(1e9+7,yylineno, TOKEN_OTHER, "ASSIGNOP"); prev_token = t_assignop; return ASSIGNOP;}
-{RELOP} {op_printf("RELOP\n"); yylval.node = createLeafNode(1e9+7,yylineno, TOKEN_OTHER, "RELOP"); prev_token = t_relop; return RELOP;}
+{RELOP} {op_printf("RELOP\n"); yylval.node = createLeafNode(1e9+7,yylineno, TOKEN_OTHER, yytext); prev_token = t_relop; return RELOP;}
 {PLUS} {op_printf("+\n"); yylval.node = createLeafNode(1e9+7,yylineno, TOKEN_OTHER, "PLUS"); prev_token = t_plus; return PLUS;}
 {MINUS} {op_printf("-\n"); yylval.node = createLeafNode(1e9+7,yylineno, TOKEN_OTHER, "MINUS"); prev_token = t_minus; return MINUS;}
 {STAR} {op_printf("*\n"); yylval.node = createLeafNode(1e9+7,yylineno, TOKEN_OTHER, "STAR"); prev_token = t_star; return STAR;}
