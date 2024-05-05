@@ -131,9 +131,9 @@ void trans_DecList(TreeNode* cur);
 void trans_Dec(TreeNode* cur);
 
 /* Expressions */
-void trans_Exp(int prod_id, TreeNode* cur, operand* place);
-void trans_Args(int prod_id, TreeNode* cur, argList* argLst);
-void trans_Cond(int prod_id, TreeNode* cur, operand* trueLabel, operand* falseLabel);
+void trans_Exp(TreeNode* cur, operand* place);
+void trans_Args(TreeNode* cur, argList* argLst);
+void trans_Cond(TreeNode* cur, operand* trueLabel, operand* falseLabel);
 
 
 

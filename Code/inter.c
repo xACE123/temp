@@ -316,16 +316,18 @@ operand* newLabel() {
 // translation recursive functions
 /* High-level Definitions */
 void trans_Program(TreeNode* cur) {
+    op_printf("[%d] %s\n", cur->lineno, cur->name);
     assert(strcmp(cur->name, "Program") == 0);
-    trans_ExtDefList(cur->firstChild);
+    trans_ExtDefList(get_k_son(1, cur));
 }
 void trans_ExtDefList(TreeNode* cur) {
+    op_printf("[%d] %s\n", cur->lineno, cur->name);
     assert(strcmp(cur->name, "ExtDefList") == 0);
     switch (cur->product_id)
     {
     case 2:
-        trans_Def(get_k_son(1, cur));
-        trans_ExtDecList(get_k_son(2, cur));
+        trans_ExtDef(get_k_son(1, cur));
+        trans_ExtDefList(get_k_son(2, cur));
         break;
     case 3:
         // epsilon
@@ -336,6 +338,7 @@ void trans_ExtDefList(TreeNode* cur) {
     }
 }
 void trans_ExtDef(TreeNode* cur) {
+    op_printf("[%d] %s\n", cur->lineno, cur->name);
     assert(strcmp(cur->name, "ExtDef") == 0);
     switch (cur->product_id)
     {
@@ -356,22 +359,26 @@ void trans_ExtDef(TreeNode* cur) {
         trans_FunDec(get_k_son(2, cur));
         break;
     default:
+        assert(0);
         break;
     }
 }
 void trans_ExtDecList(TreeNode* cur) {
+    op_printf("[%d] %s\n", cur->lineno, cur->name);
     assert(strcmp(cur->name, "ExtDecList") == 0);
     switch (cur->product_id)
     {
-    case 8:
+    case 8: {
         operand* ret = newTmpVar();
         trans_VarDec(get_k_son(1, cur), ret);
         break;
-    case 9:
+    }
+    case 9: {
         operand* ret = newTmpVar();
         trans_VarDec(get_k_son(1, cur), ret); 
         trans_ExtDecList(get_k_son(3, cur));
         break;
+    }
     default:
         assert(0);
         break;
@@ -379,6 +386,7 @@ void trans_ExtDecList(TreeNode* cur) {
 }
 /* Specifiers */
 void trans_Specifier(TreeNode* cur) {
+    op_printf("[%d] %s\n", cur->lineno, cur->name);
     assert(strcmp(cur->name, "Specifier") == 0);
     switch (cur->product_id)
     {
@@ -393,6 +401,7 @@ void trans_Specifier(TreeNode* cur) {
     }
 }
 void trans_StructSpecifier(TreeNode* cur) {
+    op_printf("[%d] %s\n", cur->lineno, cur->name);
     assert(strcmp(cur->name, "StructSpecifier") == 0);
     switch (cur->product_id)
     {
@@ -402,11 +411,14 @@ void trans_StructSpecifier(TreeNode* cur) {
         break;
     case 13:
         trans_Tag(get_k_son(2, cur));
+        break;
     default:
+        assert(0);
         break;
     }
 }
 void trans_OptTag(TreeNode* cur) {
+    op_printf("[%d] %s\n", cur->lineno, cur->name);
     assert(strcmp(cur->name, "OptTag") == 0);
     switch (cur->product_id)
     {
@@ -415,21 +427,25 @@ void trans_OptTag(TreeNode* cur) {
     case 15:
         break; 
     default:
+        assert(0);
         break;
     }
 }
 void trans_Tag(TreeNode* cur) {
+    op_printf("[%d] %s\n", cur->lineno, cur->name);
     assert(strcmp(cur->name, "Tag") == 0);
     switch (cur->product_id)
     {
     case 16:
         break;
     default:
+        assert(0);
         break;
     }
 }
 /* Declarators */
 void trans_VarDec(TreeNode* cur, operand* place) {
+    op_printf("[%d] %s\n", cur->lineno, cur->name);
     assert(strcmp(cur->name, "VarDec") == 0);
     switch (cur->product_id)
     {
@@ -437,14 +453,18 @@ void trans_VarDec(TreeNode* cur, operand* place) {
         break;
     case 18:
         break; 
-    case 119:
+    case 119: {
         operand* ret = newTmpVar();
         trans_VarDec(get_k_son(1, cur), ret);
+        break;
+    }
     default:
+        assert(0);
         break;
     }
 }
 void trans_FunDec(TreeNode* cur) {
+    op_printf("[%d] %s\n", cur->lineno, cur->name);
     assert(strcmp(cur->name, "FunDec") == 0);
     switch (cur->product_id)
     {
@@ -452,14 +472,20 @@ void trans_FunDec(TreeNode* cur) {
         trans_VarList(get_k_son(3, cur)); 
         break;
     case 20:
-        trans_VarDec(get_k_son(3, cur)); 
+        trans_VarList(get_k_son(3, cur)); 
+        break;
+    case 21:
+        break;
+    case 22:
         break;
     default:
+        assert(0);
         break;
     } 
 }
 
 void trans_VarList(TreeNode* cur) {
+    op_printf("[%d] %s\n", cur->lineno, cur->name);
     assert(strcmp(cur->name, "VarList") == 0);
     switch (cur->product_id)
     {
@@ -471,11 +497,13 @@ void trans_VarList(TreeNode* cur) {
         trans_ParamDec(get_k_son(1, cur));
         break;
     default:
+        assert(0);
         break;
     }
 }
 
 void trans_ParamDec(TreeNode* cur) {
+    op_printf("[%d] %s\n", cur->lineno, cur->name);
     assert(strcmp(cur->name, "ParamDec") == 0);
     trans_Specifier(get_k_son(1, cur));
     operand* ret = newTmpVar();
@@ -483,28 +511,42 @@ void trans_ParamDec(TreeNode* cur) {
 }
 /* Statemetns */
 void trans_Compst(TreeNode* cur) {
-    assert(strcmp(cur->name, "Compst") == 0);
+    op_printf("[%d] %s\n", cur->lineno, cur->name);
+    assert(strcmp(cur->name, "CompSt") == 0);
     trans_DefList(get_k_son(2, cur));
     trans_StmtList(get_k_son(3, cur));
 }
 void trans_StmtList(TreeNode* cur) {
+    op_printf("[%d] %s\n", cur->lineno, cur->name);
     assert(strcmp(cur->name, "StmtList") == 0);
-    trans_Stmt(get_k_son(1, cur));
-    trans_StmtList(get_k_son(2, cur));
+    if (cur->product_id == 27) {
+        trans_Stmt(get_k_son(1, cur));
+        trans_StmtList(get_k_son(2, cur));
+    }
+    else if (cur->product_id == 28) {
+    }
+    else {
+        assert(0);
+    }
 }
 void trans_Stmt(TreeNode* cur) {
+    op_printf("[%d] %s\n", cur->lineno, cur->name);
     assert(strcmp(cur->name, "Stmt") == 0);
     switch (cur->product_id)
     {
-    case 29:
+    case 29: {
         operand* ret = newTmpVar();
         trans_Exp(get_k_son(1, cur), ret);
         break;
+    }
     case 30:
         trans_Compst(get_k_son(1, cur)); 
-    case 31:
+        break;
+    case 31: {
         operand* ret = newTmpVar();
         trans_Exp(get_k_son(2, cur), ret);
+        break;
+    }
     case 32:
         //TODO
         break;
@@ -521,25 +563,29 @@ void trans_Stmt(TreeNode* cur) {
 }
 /* Local Definitions */
 void trans_DefList(TreeNode* cur) {
+    op_printf("[%d] %s\n", cur->lineno, cur->name);
     assert(strcmp(cur->name, "DefList") == 0);
     switch (cur->product_id)
     {
     case 35:
-        trans_Dec(get_k_son(1,cur));
-        trans_Dec(get_k_son(2,cur));
+        trans_Def(get_k_son(1,cur));
+        trans_DefList(get_k_son(2,cur));
         break;
     case 36:
         break;
     default:
+        assert(0);
         break;
     }
 }
 void trans_Def(TreeNode* cur) {
+    op_printf("[%d] %s\n", cur->lineno, cur->name);
     assert(strcmp(cur->name, "Def") == 0);
     trans_Specifier(get_k_son(1,cur));
     trans_DecList(get_k_son(2,cur));
 }
 void trans_DecList(TreeNode* cur) {
+    op_printf("[%d] %s\n", cur->lineno, cur->name);
     assert(strcmp(cur->name, "DecList") == 0);
     switch (cur->product_id)
     {
@@ -551,19 +597,23 @@ void trans_DecList(TreeNode* cur) {
         trans_DecList(get_k_son(3,cur));
         break;
     default:
+        assert(0);
         break;
     }
 }
 void trans_Dec(TreeNode* cur) {
+    op_printf("[%d] %s\n", cur->lineno, cur->name);
     assert(strcmp(cur->name, "Dec") == 0);
 }
 
 /* Expressions */
 void trans_Exp(TreeNode* cur, operand* place) {
+    op_printf("[%d] %s\n", cur->lineno, cur->name);
     assert(strcmp(cur->name, "Exp") == 0);
 
 }
 void trans_Args(TreeNode* cur, argList* argLst) {
+    op_printf("[%d] %s\n", cur->lineno, cur->name);
     assert(strcmp(cur->name, "Args") == 0);
 
 }
