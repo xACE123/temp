@@ -462,12 +462,50 @@ void trans_VarDec(TreeNode* cur, operand* place) {
     assert(strcmp(cur->name, "VarDec") == 0);
     switch (cur->product_id)
     {
-    case 17:
-        break;
-    case 18:
+  case 17:
+    {
+        TreeNode*s1=cur->firstChild;
+        char name[40];
+        int i=0;
+        while(s1->name[i]!='\0'){
+            name[i]=s1->name[i];
+            ++i;
+        }
+        name[i]='\0';
+        style s=search_s(stable,name);
+        if(s.dimension>1){
+            int ans=4;
+            for(int i=1;i<s.dimension;++i){
+                ans*=s.size[i];
+            }
+             operand* x = newOperand(OPR_VARIABLE, 0, newString(name));
+            newIntercode(IR_13_DEC, 2, x, ans);
+        }
         break; 
+    }
+    case 18:{
+        TreeNode*s1=cur->firstChild;
+        char name[40];
+        int i=0;
+        while(s1->name[i]!='\0'){
+            name[i]=s1->name[i];
+            ++i;
+        }
+        name[i]='\0';
+        style s=search_s(stable,name);
+        if(s.dimension>1){
+            int ans=4;
+            for(int i=1;i<s.dimension;++i){
+                ans*=s.size[i];
+            }
+             operand* x = newOperand(OPR_VARIABLE, 0, newString(name));
+            newIntercode(IR_13_DEC, 2, x, ans);
+        }
+        break; 
+    }
     case 119: {
-        // TODO: need to generate DEC [size] 
+        // TODO: need to generate DEC [size] //
+        
         operand* ret = newTmpVar();
         trans_VarDec(get_k_son(1, cur), ret);
         break;
@@ -520,11 +558,41 @@ void trans_FunDec(TreeNode* cur) {
         // trans_VarList(get_k_son(3, cur)); 
         break;
     }
-    case 20:
+   case 20:{
         // TODO: need to lookup the function symbol table to get the funciton params
         // TODO: need to generate PARAM x
+        char function_name_t[40];
+        strcpy(function_name_t, get_k_son(1, cur)->name);
+        function f = search_f(def_table, function_name_t);
+        style_link* cur = f.head;
+        while(cur != NULL) {
+            style cur_s = cur->s;
+            if (cur_s.type == 1) {
+                if (cur_s.dimension == 1) {
+                    // so is int
+                    operand* param_t = newOperand(OPR_VARIABLE, 0, newString(cur_s.s_name));
+                    newIntercode(IR_16_PARAM, 1, param_t);
+                } 
+                else if(cur_s.dimension == 2) {
+                    // int a[i] 
+                    // TODO
+                    operand* param_t = newOperand(OPR_VARIABLE, 0, newString(cur_s.s_name));
+                    newIntercode(IR_16_PARAM, 1, param_t);
+                }
+                else {
+                    // int a[i][j]...
+                    // since only 1 dimension array can be supported
+                    IR_error();
+                }
+            }
+            else {
+                IR_error();
+            }
+            cur = cur->next;
+        }
         // trans_VarList(get_k_son(3, cur)); 
         break;
+    }
     case 21:
         break;
     case 22:
