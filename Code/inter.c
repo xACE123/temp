@@ -556,6 +556,7 @@ void trans_Stmt(TreeNode* cur) {
     switch (cur->product_id)
     {
     case 29: {
+        // XXX: I think here we dont need to create a tmpVar, but what if `foo();`?
         operand* ret = newTmpVar();
         trans_Exp(get_k_son(1, cur), ret);
         break;
@@ -566,6 +567,7 @@ void trans_Stmt(TreeNode* cur) {
     case 31: {
         operand* ret = newTmpVar();
         trans_Exp(get_k_son(2, cur), ret);
+        newIntercode(IR_12_RETURN, 1, ret);
         break;
     }
     case 32:{
@@ -677,12 +679,11 @@ void trans_Exp(TreeNode* cur, operand* place) {
     switch (cur->product_id)
     {
     case 42: {
-        operand* variable = newOperand(OPR_VARIABLE, 0, newString(get_k_son(1, cur)->name));
-        newIntercode(IR_2_ASSIGN, 2, place, variable);
         operand* t1 = newTmpVar();
         trans_Exp(get_k_son(3, cur), t1);
-        // XXX: the following two codes can be reduced
+        operand* variable = newOperand(OPR_VARIABLE, 0, newString(get_k_son(1, get_k_son(1, cur))->name));
         newIntercode(IR_2_ASSIGN, 2, variable, t1);
+        // XXX: the following two codes can be reduced
         newIntercode(IR_2_ASSIGN, 2, place, variable);
         break;
     }
