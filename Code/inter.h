@@ -44,7 +44,7 @@ typedef enum opr_type {
     OPR_CONSTANT, // #0
     OPR_LABEL, // label1
     OPR_RELOP, // < > 
-    // OPR_ADDRESS, 
+    OPR_ADDRESS, 
 } opr_type;
 
 // data structure for an operand
