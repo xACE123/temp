@@ -5,9 +5,11 @@
 */
 
 #include "inter.h"
+#include "Semantic.h"
 
 // symbol tables: import from semantic.c
-
+extern funcion_table *def_table;
+extern function search_f(funcion_table* t,char name[40]);
 
 intercodeList ir_list;
 int intercodeErr = FALSE;
@@ -479,13 +481,20 @@ void trans_FunDec(TreeNode* cur) {
     op_printf("[%d] %s\n", cur->lineno, cur->name);
     assert(strcmp(cur->name, "FunDec") == 0);
     // generate FUNCTION code
-    operand* function = newOperand(OPR_VARIABLE, 0, newString(get_k_son(1, cur)->name));
-    newIntercode(IR_1_FUNCTION, 1, function);
+    operand* funct = newOperand(OPR_VARIABLE, 0, newString(get_k_son(1, cur)->name));
+    newIntercode(IR_1_FUNCTION, 1, funct);
     switch (cur->product_id)
     {
     case 19:
         // TODO: need to lookup the function symbol table to get the funciton params
         // TODO: need to generate PARAM x
+        char function_name_t[40];
+        strcpy(function_name_t, get_k_son(1, cur)->name);
+        function f = search_f(def_table, function_name_t);
+        ps_link* cur = f.head;
+        while(cur != NULL) {
+             
+        }
         // trans_VarList(get_k_son(3, cur)); 
         break;
     case 20:

@@ -95,6 +95,17 @@ typedef struct argList {
     argNode* cur;
 } argList;
 
+typedef struct paramNode paramNode;
+
+struct paramNode {
+    operand* opr;
+    argNode* nxt;
+};
+
+typedef struct paramList{
+    argNode* head;
+    argNode* cur;
+} paramList;
 //*************************** helper function ******************************
 
 char* newString(char* str);
