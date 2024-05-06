@@ -29,12 +29,12 @@ int cmp_pure_style(pure_style a, pure_style b){
     }
     return 1;
 }
-
 pure_style style_to_pure(style a){
     pure_style b;
     b.dimension=a.dimension;
     b.struct_id=a.struct_id;
     b.type=a.type;
+    memcpy(b.size,a.size,sizeof(a.size));
     return b;
 }
 
