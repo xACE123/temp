@@ -146,6 +146,7 @@ void copy_comprehension_insert2_inhernt_style(TreeNode*a,TreeNode*b){
 
 //for printing errors
 void print_bug(int lines, int type){
+    return;//lab3
     if(wrong[lines]==1)
         return;
     wrong[lines]=1;
@@ -274,14 +275,14 @@ void fdfs(TreeNode* p){
             fdfs(s3);
             return;
         }
-        ps_link*odd=(ps_link*)malloc(sizeof(ps_link)),*nee;
-        odd->p=style_to_pure(t->s);
+        style_link*odd=(style_link*)malloc(sizeof(style_link)),*nee;
+        odd->s=t->s;
         odd->next=NULL;
         f.head=odd;
         t=t->next;
         while(t!=NULL){
-            nee=(ps_link*)malloc(sizeof(ps_link));
-            nee->p=style_to_pure(t->s);
+            nee=(style_link*)malloc(sizeof(style_link));
+            nee->s=(t->s);
             nee->next=NULL;
             odd->next=nee;
             t=t->next;
@@ -299,6 +300,7 @@ void fdfs(TreeNode* p){
         fdfs(s3);
         return;
     }else if(p->product_id==7){//Specifier FunDec SEMI 
+        return;//lab 3 has no use
         p->firstChild->inherent.sign=0;
         TreeNode* s1=p->firstChild,*s2=get_k_son(2,p);
         fdfs(s1);
@@ -931,9 +933,10 @@ void fdfs(TreeNode* p){
         }
         p->comprehensive.ph->p=fff.return_type;
         fdfs(s3);
-        ps_link*ps1=fff.head,*ps2=s3->comprehensive.ph;
+        style_link*ps1=fff.head;
+        ps_link*ps2=s3->comprehensive.ph;
         while(ps1!=NULL && ps2!=NULL){
-            if(cmp_pure_style(ps1->p,ps2->p)==0){
+            if(cmp_pure_style(style_to_pure(ps1->s),ps2->p)==0){
                 print_bug(p->lineno,9);
                 return;
             }

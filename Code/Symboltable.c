@@ -128,9 +128,9 @@ void insert_a(architecture_table* t,architecture f){
 
 void print_function(function f){
     printf("%s, %d, ",f.s_name,f.return_type.type);
-    ps_link*p=f.head;
+    style_link*p=f.head;
     while(p!=NULL){
-        printf("%d  ",p->p.type);
+        printf("%d  ",p->s.type);
         p=p->next;
     }
     printf("\n");
@@ -178,9 +178,9 @@ void insert_f(funcion_table* t, function f){
 int cmp_function(function a, function b){
    // print_function(a);print_function(b);
     if(cmp_pure_style(a.return_type,b.return_type)==0)return 0;
-    ps_link*s1 =a.head,*s2=b.head;
+    style_link*s1 =a.head,*s2=b.head;
     while(s1!=NULL && s2!=NULL){
-        if(cmp_pure_style(s1->p,s2->p)==0)return 0;
+        if(cmp_pure_style(style_to_pure(s1->s),style_to_pure(s2->s))==0)return 0;
         s1=s1->next;
         s2=s2->next;
     }

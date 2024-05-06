@@ -26,6 +26,7 @@ typedef struct pure_style
     int type;//0=bool, 1=int, 2=float, 3=struct, 4=null_type
     int dimension;//
     int struct_id;// if it is a struct
+    int size[100];
 }pure_style;
 
 typedef struct ps_link
@@ -45,6 +46,7 @@ typedef struct style
     int type;//0 means bool, 1 means int, 2=float, 3=struct
     int dimension;//
     int struct_id;// if it is a struct
+    int size[100];
 }style;
 int cmp_style(style a, style b);
 
@@ -94,7 +96,7 @@ typedef struct  function
 {
      char s_name[40];
      pure_style return_type;
-     ps_link* head;//list of required parameters
+     style_link* head;//list of required parameters
      int lines;
 }function;
 

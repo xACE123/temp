@@ -485,18 +485,41 @@ void trans_FunDec(TreeNode* cur) {
     newIntercode(IR_1_FUNCTION, 1, funct);
     switch (cur->product_id)
     {
-    case 19:
+    case 19: {
         // TODO: need to lookup the function symbol table to get the funciton params
         // TODO: need to generate PARAM x
         char function_name_t[40];
         strcpy(function_name_t, get_k_son(1, cur)->name);
         function f = search_f(def_table, function_name_t);
-        ps_link* cur = f.head;
+        style_link* cur = f.head;
         while(cur != NULL) {
-             
+            style cur_s = cur->s;
+            if (cur_s.type == 1) {
+                if (cur_s.dimension == 1) {
+                    // so is int
+                    operand* param_t = newOperand(OPR_VARIABLE, 0, newString(cur_s.s_name));
+                    newIntercode(IR_16_PARAM, 1, param_t);
+                } 
+                else if(cur_s.dimension == 2) {
+                    // int a[i] 
+                    // TODO
+                    operand* param_t = newOperand(OPR_VARIABLE, 0, newString(cur_s.s_name));
+                    newIntercode(IR_16_PARAM, 1, param_t);
+                }
+                else {
+                    // int a[i][j]...
+                    // since only 1 dimension array can be supported
+                    IR_error();
+                }
+            }
+            else {
+                IR_error();
+            }
+            cur = cur->next;
         }
         // trans_VarList(get_k_son(3, cur)); 
         break;
+    }
     case 20:
         // TODO: need to lookup the function symbol table to get the funciton params
         // TODO: need to generate PARAM x
