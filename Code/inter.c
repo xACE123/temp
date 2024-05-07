@@ -730,7 +730,7 @@ void trans_Stmt(TreeNode* cur) {
         operand* l2 = newLabel();
         operand* l3 = newLabel();
         newIntercode(IR_0_LABEL, 1, l1);
-        trans_Cond(get_k_son(3, cur), l1, l2);
+        trans_Cond(get_k_son(3, cur), l2, l3);
         newIntercode(IR_0_LABEL, 1, l2);
         trans_Stmt(get_k_son(5, cur));
         newIntercode(IR_10_GOTO, 1, l1);
