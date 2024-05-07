@@ -1,45 +1,85 @@
-FUNCTION fact :
-PARAM n
-t0 := n
-t1 := #1
-IF t0 == t1 GOTO label0
-GOTO label1
-LABEL label0 :
-t2 := n
-RETURN t2
-GOTO label2
-LABEL label1 :
-t4 := n
-t7 := n
-t8 := #1
-t6 := t7 - t8
-ARG t6
-t5 := CALL fact
-t3 := t4 * t5
-RETURN t3
-LABEL label2 :
+FUNCTION add :
+PARAM temp
+t3 := temp
+t4 := #0
+t5 := t4 * #4
+t1 := t3 + t5
+t6 := temp
+t7 := #1
+t8 := t7 * #4
+t2 := t6 + t8
+t1 := *t1
+t2 := *t2
+t0 := t1 + t2
+RETURN t0
 FUNCTION main :
-READ t12
-m := t12
-t11 := m
-t13 := m
-t14 := #1
-IF t13 > t14 GOTO label3
-GOTO label4
+DEC op 8
+DEC r 8
+t14 := #0
+i := t14
+t15 := #0
+j := t15
+LABEL label0 :
+t16 := i
+t17 := #2
+IF t16 < t17 GOTO label0
+GOTO label1
+LABEL label1 :
 LABEL label3 :
-t17 := m
-ARG t17
-t16 := CALL fact
-result := t16
-t15 := result
-GOTO label5
+t18 := j
+t19 := #2
+IF t18 < t19 GOTO label3
+GOTO label4
 LABEL label4 :
-t19 := #1
-result := t19
-t18 := result
+t22 := i
+t23 := j
+t21 := t22 + t23
+t25 := *op
+t26 := j
+t27 := t26 * #4
+t24 := t25 + t27
+*t24 := t21
+t20 := t21
+t30 := j
+t31 := #1
+t29 := t30 + t31
+t32 := j
+j := t29
+t28 := j
+GOTO label3
 LABEL label5 :
-t21 := result
-WRITE t21
-t20 := #0
-t22 := #0
-RETURN t22
+t35 := *op
+ARG t35
+t34 := CALL add
+t39 := *r
+t40 := #0
+t41 := t40 * #8
+t37 := t39 + t41
+t38 := i
+t42 := t38 * #4
+t36 := t37 + t42
+*t36 := t34
+t33 := t34
+t47 := *r
+t48 := #0
+t49 := t48 * #8
+t45 := t47 + t49
+t46 := i
+t50 := t46 * #4
+t44 := t45 + t50
+WRITE t44
+t43 := #0
+t53 := i
+t54 := #1
+t52 := t53 + t54
+t55 := i
+i := t52
+t51 := i
+t57 := #0
+t58 := j
+j := t57
+t56 := j
+GOTO label0
+LABEL label2 :
+t59 := #0
+RETURN t59

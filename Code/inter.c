@@ -189,6 +189,7 @@ void newIntercode(ir_type type, int argc, ...) {
 
 
 void printInterCode(FILE* fp) {
+    if (intercodeErr) return;
     // fprintf(fp, "printInterCode\n");
     intercodeNode* cur = ir_list.head;
     while(cur != NULL) {
@@ -425,8 +426,10 @@ void trans_Specifier(TreeNode* cur) {
     case 10:
         break;
     case 11://
-        printf("Cannot translate: Code contains sturct\n");
+        // printf("Cannot translate: Code contains sturct\n");
+        IR_error();
         has_struct=1;
+        intercodeErr = TRUE;
         return;
 
         trans_StructSpecifier(get_k_son(1, cur));
@@ -1029,14 +1032,6 @@ void trans_Exp(TreeNode* cur, operand* place) {
             t2->type=OPR_VARIABLE;
              newIntercode(IR_8_READ_ADDR,2,t2,t2);
          }
-        operand* t3 = newTmpVar();
-        operand* t4 = newOperand(OPR_CONSTANT,ans,NULL);
-        newIntercode(IR_5_MUL, 3,t3,t2,t4);
-        newIntercode(IR_3_ADD, 3,place,t1,t3);
-        place->type=OPR_ADDRESS;
-        // TODO
-        break;
-    }
         operand* t3 = newTmpVar();
         operand* t4 = newOperand(OPR_CONSTANT,ans,NULL);
         newIntercode(IR_5_MUL, 3,t3,t2,t4);
