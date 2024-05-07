@@ -711,12 +711,21 @@ void trans_Exp(TreeNode* cur, operand* place) {
     switch (cur->product_id)
     {
     case 42: {
+        operand* t3 = newTmpVar();
+        trans_Exp(get_k_son(3, cur), t3);
         operand* t1 = newTmpVar();
-        trans_Exp(get_k_son(3, cur), t1);
-        operand* variable = newOperand(OPR_VARIABLE, 0, newString(get_k_son(1, get_k_son(1, cur))->name));
-        newIntercode(IR_2_ASSIGN, 2, variable, t1);
+        trans_Exp(get_k_son(1, cur), t1);
+        //operand* variable = newOperand(OPR_VARIABLE, 0, newString(get_k_son(1, get_k_son(1, cur))->name));
+        if(t3->type==OPR_ADDRESS){
+            newIntercode(IR_8_READ_ADDR,2,t3,t3);
+        }
+        if(t1->type==OPR_ADDRESS){
+            newIntercode(IR_8_READ_ADDR,2,t1,t1);
+        }
+        newIntercode(IR_2_ASSIGN, 2, t1, t3);
         // XXX: the following two codes can be reduced
-        newIntercode(IR_2_ASSIGN, 2, place, variable);
+        newIntercode(IR_2_ASSIGN, 2, place, t1);
+        place->type=OPR_VARIABLE;
         break;
     }
     case 43: {
@@ -760,6 +769,13 @@ void trans_Exp(TreeNode* cur, operand* place) {
         operand* t2 = newTmpVar();
         trans_Exp(get_k_son(1, cur), t1);
         trans_Exp(get_k_son(3, cur), t2);
+        if(t1->type==OPR_ADDRESS){
+             newIntercode(IR_8_READ_ADDR,2,t1,t1);
+        }
+        if(t2->type==OPR_ADDRESS){
+            newIntercode(IR_8_READ_ADDR,2,t2,t2);
+        }
+        place->type=OPR_VARIABLE;
         newIntercode(IR_3_ADD, 3, place, t1, t2);
         break;
     }
@@ -768,6 +784,13 @@ void trans_Exp(TreeNode* cur, operand* place) {
         operand* t2 = newTmpVar();
         trans_Exp(get_k_son(1, cur), t1);
         trans_Exp(get_k_son(3, cur), t2);
+        if(t1->type==OPR_ADDRESS){
+             newIntercode(IR_8_READ_ADDR,2,t1,t1);
+        }
+        if(t2->type==OPR_ADDRESS){
+            newIntercode(IR_8_READ_ADDR,2,t2,t2);
+        }
+        place->type=OPR_VARIABLE;
         newIntercode(IR_4_SUB, 3, place, t1, t2);
         break;
     }
@@ -776,6 +799,13 @@ void trans_Exp(TreeNode* cur, operand* place) {
         operand* t2 = newTmpVar();
         trans_Exp(get_k_son(1, cur), t1);
         trans_Exp(get_k_son(3, cur), t2);
+        if(t1->type==OPR_ADDRESS){
+             newIntercode(IR_8_READ_ADDR,2,t1,t1);
+        }
+        if(t2->type==OPR_ADDRESS){
+            newIntercode(IR_8_READ_ADDR,2,t2,t2);
+        }
+        place->type=OPR_VARIABLE;
         newIntercode(IR_5_MUL, 3, place, t1, t2);
         break;
     }
@@ -784,6 +814,13 @@ void trans_Exp(TreeNode* cur, operand* place) {
         operand* t2 = newTmpVar();
         trans_Exp(get_k_son(1, cur), t1);
         trans_Exp(get_k_son(3, cur), t2);
+        if(t1->type==OPR_ADDRESS){
+             newIntercode(IR_8_READ_ADDR,2,t1,t1);
+        }
+        if(t2->type==OPR_ADDRESS){
+            newIntercode(IR_8_READ_ADDR,2,t2,t2);
+        }
+        place->type=OPR_VARIABLE;
         newIntercode(IR_6_DIV, 3, place, t1, t2);
         break;
     }
@@ -875,6 +912,22 @@ void trans_Exp(TreeNode* cur, operand* place) {
         break;
     }
     case 57: {
+        int ans=4;
+        for(int i=1;i<cur->comprehensive.ph->p.dimension;++i)
+            ans*=cur->comprehensive.ph->p.size[i];
+         operand* t1 = newTmpVar();
+         operand* t2 = newTmpVar();
+         trans_Exp(get_k_son(1,cur),t1);
+         trans_Exp(get_k_son(3,cur),t2);
+         if(t2->type==OPR_ADDRESS){
+            t2->type=OPR_VARIABLE;
+             newIntercode(IR_8_READ_ADDR,t2,t2);
+         }
+        operand* t3 = newTmpVar();
+        operand* t4 = newOperand(OPR_CONSTANT,ans,NULL);
+        newIntercode(IR_5_MUL, 3,t3,t2,t4);
+        newIntercode(IR_3_ADD, 3,place,t1,t3);
+        place->type=OPR_ADDRESS;
         // TODO
         break;
     }
@@ -889,13 +942,55 @@ void trans_Exp(TreeNode* cur, operand* place) {
         break;
     }
     case 60: {
-        operand* variable = newOperand(OPR_VARIABLE, 0, newString(get_k_son(1, cur)->name));
-        newIntercode(IR_2_ASSIGN, 2, place, variable);
+        if(cur->comprehensive.ph->p.dimension<2){
+             place->type=OPR_VARIABLE;
+            operand* variable = newOperand(OPR_VARIABLE, 0, newString(get_k_son(1, cur)->name));
+            newIntercode(IR_2_ASSIGN, 2, place, variable);
+        }
+        else{
+            place->type=OPR_ADDRESS;
+            TreeNode*s1=cur->firstChild;
+            char name[40];
+            int i=0;
+            while (s1->name[i]!='\0')
+            {
+                name[i]=s1->name[i];
+                ++i;
+            }
+            name[i]='\0';
+            if(find_pars(name)==1){
+                operand* variable = newOperand(OPR_ADDRESS, 0, newString(get_k_son(1, cur)->name));
+                 newIntercode(IR_2_ASSIGN, 2, place, variable);
+            }else{
+                operand* variable = newOperand(OPR_VARIABLE, 0, newString(get_k_son(1, cur)->name));
+                newIntercode(IR_8_READ_ADDR, 2, place, variable);
+            }
+        }
         break;
     }
     case 61: {
-        operand* variable = newOperand(OPR_VARIABLE, 0, newString(get_k_son(1, cur)->name));
-        newIntercode(IR_2_ASSIGN, 2, place, variable);
+         if(cur->comprehensive.ph->p.dimension<2){
+            operand* variable = newOperand(OPR_VARIABLE, 0, newString(get_k_son(1, cur)->name));
+            newIntercode(IR_2_ASSIGN, 2, place, variable);
+        }
+        else{
+            TreeNode*s1=cur->firstChild;
+            char name[40];
+            int i=0;
+            while (s1->name[i]!='\0')
+            {
+                name[i]=s1->name[i];
+                ++i;
+            }
+            name[i]='\0';
+            if(find_pars(name)==1){
+                operand* variable = newOperand(OPR_ADDRESS, 0, newString(get_k_son(1, cur)->name));
+                 newIntercode(IR_2_ASSIGN, 2, place, variable);
+            }else{
+                operand* variable = newOperand(OPR_ADDRESS, 0, newString(get_k_son(1, cur)->name));
+                newIntercode(IR_8_READ_ADDR, 2, place, variable);
+            }
+        }
         break;
     }
     case 62: {
@@ -967,6 +1062,12 @@ void trans_Cond(TreeNode* cur, operand* trueLabel, operand* falseLabel) {
         operand* t2 = newTmpVar();
         trans_Exp(get_k_son(1, cur), t1);
         trans_Exp(get_k_son(3, cur), t2);
+        if(t1->type==OPR_ADDRESS){
+            newIntercode(IR_8_READ_ADDR,2,t1,t1);
+        }
+        if(t2->type==OPR_ADDRESS){
+            newIntercode(IR_8_READ_ADDR,2,t2,t2);
+        }
         operand* op = newOperand(OPR_RELOP, 0, newString(get_k_son(2, cur)->name));
         newIntercode(IR_11_IF, 4, t1, t2, trueLabel, op);
         newIntercode(IR_10_GOTO, 1, falseLabel);
@@ -995,6 +1096,10 @@ void trans_Cond(TreeNode* cur, operand* trueLabel, operand* falseLabel) {
         operand* t2 = newOperand(OPR_CONSTANT, 0, NULL);
         operand* op = newOperand(OPR_RELOP, 0, newString("!="));
         trans_Exp(cur, t1);
+        if(t1->type==OPR_ADDRESS){
+            newIntercode(IR_8_READ_ADDR,2,t1,t1);
+            t1->type=OPR_VARIABLE;
+        }
         newIntercode(IR_11_IF, 4, t1, t2, trueLabel, op);
         newIntercode(IR_10_GOTO, 1, falseLabel); 
         break;
