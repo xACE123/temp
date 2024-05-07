@@ -3,13 +3,26 @@
 * @date: 2024/5/5
 * @abstract: source file of the syntax tree.
 */
-
 #include "inter.h"
 #include "Semantic.h"
+int has_struct=0;
+char pars[500][40];
+int pars_num=0;
+void insert_pars(char a[40]){
+    memcpy(pars[pars_num],a,40);
+    pars_num++;
+}
+int find_pars(char a[40]){
+    for(int i=0;i<pars_num;++i)
+        if(cmp(pars[i],a))
+            return 1;
+    return 0;
+}
 
 // symbol tables: import from semantic.c
 extern funcion_table *def_table;
 extern function search_f(funcion_table* t,char name[40]);
+extern style_table* stable;
 
 intercodeList ir_list;
 int intercodeErr = FALSE;
@@ -45,6 +58,9 @@ operand* newOperand(opr_type type, int val, char* name) {
     case OPR_RELOP:
         opr->u.name = name;
         break;
+    case OPR_ADDRESS:
+        opr->u.name = name;
+        break;
     default:
         assert(0);
         break;
@@ -65,6 +81,9 @@ void printOperand(FILE* fout, operand* opr) {
         fprintf(fout, "%s", opr->u.name);
         break;
     case OPR_RELOP:
+        fprintf(fout, "%s", opr->u.name);
+        break;
+    case OPR_ADDRESS:
         fprintf(fout, "%s", opr->u.name);
         break;
     default:
@@ -405,7 +424,11 @@ void trans_Specifier(TreeNode* cur) {
     {
     case 10:
         break;
-    case 11:
+    case 11://
+        printf("Cannot translate: Code contains sturct\n");
+        has_struct=1;
+        return;
+
         trans_StructSpecifier(get_k_son(1, cur));
         break; 
     default:
@@ -463,11 +486,51 @@ void trans_VarDec(TreeNode* cur, operand* place) {
     switch (cur->product_id)
     {
     case 17:
-        break;
-    case 18:
+    {
+        TreeNode*s1=cur->firstChild;
+        char name[40];
+        int i=0;
+        while(s1->name[i]!='\0'){
+            name[i]=s1->name[i];
+            ++i;
+        }
+        name[i]='\0';
+        style s=search_s(stable,name);
+        if(s.dimension>1){
+        //    printf("%s %d\n",s.s_name,s.dimension);
+            int ans=4;
+            for(int i=1;i<s.dimension;++i){
+                ans*=s.size[i];
+          //      printf("%d\n",s.size[i]);
+            }
+             operand* x = newOperand(OPR_VARIABLE, 0, newString(name));
+            newIntercode(IR_13_DEC, 2, x, ans);
+        }
         break; 
+    }
+    case 18:{
+        TreeNode*s1=cur->firstChild;
+        char name[40];
+        int i=0;
+        while(s1->name[i]!='\0'){
+            name[i]=s1->name[i];
+            ++i;
+        }
+        name[i]='\0';
+        style s=search_s(stable,name);
+        if(s.dimension>1){
+            int ans=4;
+            for(int i=1;i<s.dimension;++i){
+                ans*=s.size[i];
+            }
+             operand* x = newOperand(OPR_VARIABLE, 0, newString(name));
+            newIntercode(IR_13_DEC, 2, x, ans);
+        }
+        break; 
+    }
     case 119: {
-        // TODO: need to generate DEC [size] 
+        // TODO: need to generate DEC [size] //
+        
         operand* ret = newTmpVar();
         trans_VarDec(get_k_son(1, cur), ret);
         break;
@@ -505,6 +568,7 @@ void trans_FunDec(TreeNode* cur) {
                     // TODO
                     operand* param_t = newOperand(OPR_VARIABLE, 0, newString(cur_s.s_name));
                     newIntercode(IR_16_PARAM, 1, param_t);
+                    insert_pars(cur_s.s_name);
                 }
                 else {
                     // int a[i][j]...
@@ -520,11 +584,41 @@ void trans_FunDec(TreeNode* cur) {
         // trans_VarList(get_k_son(3, cur)); 
         break;
     }
-    case 20:
+    case 20:{
         // TODO: need to lookup the function symbol table to get the funciton params
         // TODO: need to generate PARAM x
+        char function_name_t[40];
+        strcpy(function_name_t, get_k_son(1, cur)->name);
+        function f = search_f(def_table, function_name_t);
+        style_link* cur = f.head;
+        while(cur != NULL) {
+            style cur_s = cur->s;
+            if (cur_s.type == 1) {
+                if (cur_s.dimension == 1) {
+                    // so is int
+                    operand* param_t = newOperand(OPR_VARIABLE, 0, newString(cur_s.s_name));
+                    newIntercode(IR_16_PARAM, 1, param_t);
+                } 
+                else if(cur_s.dimension == 2) {
+                    // int a[i] 
+                    // TODO
+                    operand* param_t = newOperand(OPR_VARIABLE, 0, newString(cur_s.s_name));
+                    newIntercode(IR_16_PARAM, 1, param_t);
+                }
+                else {
+                    // int a[i][j]...
+                    // since only 1 dimension array can be supported
+                    IR_error();
+                }
+            }
+            else {
+                IR_error();
+            }
+            cur = cur->next;
+        }
         // trans_VarList(get_k_son(3, cur)); 
         break;
+    }
     case 21:
         break;
     case 22:
@@ -599,6 +693,10 @@ void trans_Stmt(TreeNode* cur) {
     case 31: {
         operand* ret = newTmpVar();
         trans_Exp(get_k_son(2, cur), ret);
+        if(ret->type==OPR_ADDRESS){
+            ret->type=OPR_VARIABLE;
+            newIntercode(IR_8_READ_ADDR,2,ret,ret);
+        }
         newIntercode(IR_12_RETURN, 1, ret);
         break;
     }
@@ -692,10 +790,11 @@ void trans_Dec(TreeNode* cur) {
         break;
     }
     case 41: {  
-        operand* t1 = newTmpVar();
+        operand* t1 = newOperand(OPR_VARIABLE, 0, get_k_son(1,cur)->comprehensive.sh->s.s_name);
         trans_VarDec(get_k_son(1, cur), t1);
         operand* t2 = newTmpVar();
         trans_Exp(get_k_son(3, cur), t2); 
+          newIntercode(IR_2_ASSIGN, 2, t1,t2);
         // VarDec := Exp
         break; 
     }
@@ -720,11 +819,18 @@ void trans_Exp(TreeNode* cur, operand* place) {
             newIntercode(IR_8_READ_ADDR,2,t3,t3);
         }
         if(t1->type==OPR_ADDRESS){
-            newIntercode(IR_8_READ_ADDR,2,t1,t1);
-        }
-        newIntercode(IR_2_ASSIGN, 2, t1, t3);
+            newIntercode(IR_9_WRITE_ADDR, 2, t1, t3);
+            newIntercode(IR_2_ASSIGN, 2, place, t3);
+        }else{
+          //  printf("42-1\n");
+          //   printf("42-2\n");
+          operand* variable = newOperand(OPR_VARIABLE, 0, newString(get_k_son(1, get_k_son(1, cur))->name));
+            newIntercode(IR_2_ASSIGN, 2, variable, t3);
+         //    printf("42-3\n");
         // XXX: the following two codes can be reduced
-        newIntercode(IR_2_ASSIGN, 2, place, t1);
+            newIntercode(IR_2_ASSIGN, 2, place, variable);
+          //   printf("42-4\n");
+        }
         place->type=OPR_VARIABLE;
         break;
     }
@@ -921,8 +1027,16 @@ void trans_Exp(TreeNode* cur, operand* place) {
          trans_Exp(get_k_son(3,cur),t2);
          if(t2->type==OPR_ADDRESS){
             t2->type=OPR_VARIABLE;
-             newIntercode(IR_8_READ_ADDR,t2,t2);
+             newIntercode(IR_8_READ_ADDR,2,t2,t2);
          }
+        operand* t3 = newTmpVar();
+        operand* t4 = newOperand(OPR_CONSTANT,ans,NULL);
+        newIntercode(IR_5_MUL, 3,t3,t2,t4);
+        newIntercode(IR_3_ADD, 3,place,t1,t3);
+        place->type=OPR_ADDRESS;
+        // TODO
+        break;
+    }
         operand* t3 = newTmpVar();
         operand* t4 = newOperand(OPR_CONSTANT,ans,NULL);
         newIntercode(IR_5_MUL, 3,t3,t2,t4);
