@@ -557,6 +557,7 @@ void fdfs(TreeNode* p){
             slk->s.dimension=p->inherent.ph->p.dimension;
             slk->s.struct_id=p->inherent.ph->p.struct_id;
             slk->s.type=p->inherent.ph->p.type;
+            memcpy(slk->s.size,p->inherent.ph->p.size,400);
             slk->next=NULL;
             strncpy(slk->s.s_name,name,40);
             p->comprehensive.sh=slk;
@@ -565,6 +566,7 @@ void fdfs(TreeNode* p){
             ss.dimension=p->inherent.ph->p.dimension;
             ss.type=p->inherent.ph->p.type;
             ss.struct_id=p->inherent.ph->p.struct_id;
+            memcpy(ss.size,p->inherent.ph->p.size,400);
             strncpy(ss.s_name,name,40);
             insert_s(stable,ss);
             style_link* slk=(style_link*)malloc(sizeof(style_link));
@@ -573,17 +575,21 @@ void fdfs(TreeNode* p){
             slk->s.type=p->inherent.ph->p.type;
             slk->next=NULL;
             strncpy(slk->s.s_name,name,40);
+            memcpy(slk->s.size,p->inherent.ph->p.size,400);
             p->comprehensive.sh=slk;
         }
         return;
     }else if(p->product_id==119){//  VarDec LB INT RB  
-        TreeNode*s1=p->firstChild;
+        TreeNode*s1=p->firstChild,*s3=get_k_son(3,p);
+        int nums3=atoi(s3->name);
         s1->inherent.sign=p->inherent.sign;
         ps_link* ppp=(ps_link*)malloc(sizeof(ps_link));
         ppp->next=NULL;
         ppp->p=p->inherent.ph->p;
+        ppp->p.size[ppp->p.dimension]=nums3;
         ppp->p.dimension+=1;
         s1->inherent.ph=ppp;
+
         if(s1->inherent.sign==1){
             copy_inhernt_style(p,s1);
         }

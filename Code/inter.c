@@ -1037,6 +1037,14 @@ void trans_Exp(TreeNode* cur, operand* place) {
         // TODO
         break;
     }
+        operand* t3 = newTmpVar();
+        operand* t4 = newOperand(OPR_CONSTANT,ans,NULL);
+        newIntercode(IR_5_MUL, 3,t3,t2,t4);
+        newIntercode(IR_3_ADD, 3,place,t1,t3);
+        place->type=OPR_ADDRESS;
+        // TODO
+        break;
+    }
     case 58: {
         intercodeErr = TRUE;
         IR_error();
